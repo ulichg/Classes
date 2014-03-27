@@ -2,14 +2,14 @@
 #define _CONTROLLER_H_
 
 #include "cocos2d.h"
-#include "Person/MaoChong.h"
+#include "ControllerListener.h"
 
 using namespace cocos2d;
 class Controller : public CCLayer{
 public:
-	void setControllerListener(Hero* mControllerListener);
+	void setControllerListener(ControllerListener* mControllerListener);
 
 protected:
-	Hero* mControllerListener;
+	ControllerListener* mControllerListener;
 };
 #endif

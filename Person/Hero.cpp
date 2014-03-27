@@ -95,7 +95,7 @@ CCPoint Hero::tileCoordForPosition(CCPoint pos){
 
 void Hero::setController(Controller* controller){
 	this->mController = controller;
-	mController->setControllerListener(this);
+	//mController->setControllerListener(this);
 }
 
 CCPoint Hero::getCurPosition(){
