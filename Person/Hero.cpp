@@ -28,12 +28,6 @@ void Hero::setSprite(CCSprite* mSprite){
 	this->mSprite = mSprite;
 }
 
-void Hero::setSimplePosition(int x, int y){
-	if (mSprite){
-
-	}
-}
-
 void Hero::setViewPointByPlayer()
 {
 	if (mSprite == NULL) {
@@ -97,7 +91,7 @@ void Hero::setController(Controller* controller){
 
 CCPoint Hero::getCurPosition(){
 	if (mSprite){
-		return mSprite->getPosition();
+		return this->getPosition();
 	}
 
 	return CCPoint(0, 0);

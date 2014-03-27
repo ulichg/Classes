@@ -26,5 +26,8 @@ public:
 private:
 	int iXSpeed;
 	int iYSpeed;
+	// ´¥Ãþ¿ªÊ¼µã
+	CCPoint startP;
+	bool isStartTouch;
 };
 

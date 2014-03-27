@@ -1,12 +1,8 @@
 #include "BaseScene.h"
-
-#define MAP_TAG 10000
-#define HERO_TAG 10001
-#define CONTROLLER_TAG 10002
+#include "Data/GlobalVar.h"
 
 bool BaseScene::init(){
 	setMap(NULL);
-	addHero(NULL);
 	return true;
 }
 
@@ -27,18 +23,6 @@ void BaseScene::setMap(CCTMXTiledMap* map){
 	}
 	this->map = map;
 	this->addChild(this->map, -1, MAP_TAG);
-}
-
-void BaseScene::addHero(Hero* hero){
-	if (!hero){
-		return;
-	}
-	if (this->getChildByTag(HERO_TAG)){
-		this->removeChildByTag(HERO_TAG);
-	}
-
-	this->hero = hero;
-	this->addChild(hero, 10, HERO_TAG);
 }
 
 void BaseScene::bindControllerToHero(Controller* controller)

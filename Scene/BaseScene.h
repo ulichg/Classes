@@ -11,7 +11,6 @@ public:
 
 	virtual bool init();
 	virtual void setMap(CCTMXTiledMap* map);
-	virtual void addHero(Hero* hero);
 	static CCScene* scene();
 	virtual void bindControllerToHero(Controller* controller);
 

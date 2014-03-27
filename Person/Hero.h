@@ -12,14 +12,16 @@ enum HeroStatus
 
 
 class Hero :
-	public CCNode, public ControllerListener
+	public CCNode
 {
 public:
 	virtual void setSprite(CCSprite* mSprite);
 	virtual void setController(Controller* controller);
-	virtual void setSimplePosition(int x, int y);
+	virtual void setSimplePosition(CCPoint c);
 	virtual CCPoint getCurPosition();
 	virtual void setViewPointByPlayer();
+	virtual void setStatus();
+	virtual void statusChangeTo(HeroStatus mStatus);
 
 protected:
 	CCSprite* mSprite;

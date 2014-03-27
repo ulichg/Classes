@@ -1,9 +1,5 @@
 #include "Rope.h"
-
-const float Rope::MAXLINE = 400;
-const float Rope::MINLINE = 120;
-const float RODE_WIDTH = 32;
-const float SPEED = 10;
+#include "Data/GlobalVar.h"
 
 Rope::Rope(){
 	init();
@@ -12,16 +8,12 @@ Rope::Rope(){
 bool Rope::init()
 {
 	this->setAnchorPoint(ccp(0.5, 1));
-	this->mSprite = CCSprite::create("map/rope.png");
 	// 随机方向
 	isDown = rand() % 2;
 
 	// 随机开始长度
-	curLength = rand() % (int)(Rope::MAXLINE - Rope::MINLINE) + Rope::MINLINE;
-	mSprite->setAnchorPoint(ccp(0.5, 1));
-	mSprite->setPosition(CCPointZero);
-	this->addChild(this->mSprite);
-
+	curLength = rand() % (int)(MAXLINE - MINLINE) + MINLINE;
+	setShowLength();
 	return true;
 }
 
@@ -59,6 +51,10 @@ void Rope::update(float delta)
 		}
 		
 	}
+	setShowLength();
+}
+
+void Rope::setShowLength(){
 	this->mSprite = CCSprite::create("map/rope.png", CCRectMake(0, 0, 32, this->curLength));
 	mSprite->setAnchorPoint(ccp(0.5, 1));
 	mSprite->setPosition(CCPointZero);

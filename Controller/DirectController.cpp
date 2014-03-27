@@ -2,6 +2,8 @@
 
 
 bool DirectController::init(){
+	this->isStartTouch = false;
+	this->startP = CCPointZero;
 	this->iXSpeed = 0;
 	this->iYSpeed = 0;
 
@@ -14,7 +16,7 @@ bool DirectController::init(){
 
 void DirectController::update(float dt)
 {
-	if (mControllerListener == NULL) {
+	/*if (mControllerListener == NULL) {
 		return;
 	}
 
@@ -22,7 +24,7 @@ void DirectController::update(float dt)
 	curPos.x += iXSpeed;
 	curPos.y += iYSpeed;
 
-	mControllerListener->setSimplePosition(curPos.x, curPos.y);
+	mControllerListener->setSimplePosition(curPos.x, curPos.y);*/
 }
 
 void DirectController::setiXSpeed(int iSpeed)
@@ -36,34 +38,59 @@ void DirectController::setiYSpeed(int iSpeed)
 }
 bool DirectController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
+	if (!mControllerListener){
+		return false;
+	}
+	if (isStartTouch){
+		return;
+	}
+	isStartTouch = true;
+	/* 获取点击的坐标 */
+	CCPoint touchLocation = pTouch->getLocationInView();
+	this->startP = CCDirector::sharedDirector()->convertToGL(touchLocation);
 	return true;
 }
 
 void DirectController::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
 {
-	/* 获取点击的坐标 */
-	CCPoint touchLocation = pTouch->getLocationInView();
-	touchLocation = CCDirector::sharedDirector()->convertToGL(touchLocation);
+	///* 获取点击的坐标 */
+	//CCPoint touchLocation = pTouch->getLocationInView();
+	//touchLocation = CCDirector::sharedDirector()->convertToGL(touchLocation);
 
-	/* 被控制对象的坐标 */
-	CCPoint pos = mControllerListener->getCurPosition();
+	///* 被控制对象的坐标 */
+	//CCPoint pos = mControllerListener->getCurPosition();
 
-	/* 判断是向左移动还是向右移动 */
-	int iSpeed = 0;
-	if (touchLocation.x > pos.x) {
-		iSpeed = 1;
-	}
-	else {
-		iSpeed = -1;
-	}
+	///* 判断是向左移动还是向右移动 */
+	//int iSpeed = 0;
+	//if (touchLocation.x > pos.x) {
+	//	iSpeed = 1;
+	//}
+	//else {
+	//	iSpeed = -1;
+	//}
 
-	setiXSpeed(iSpeed);
+	//setiXSpeed(iSpeed);
 }
 
 void DirectController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 {
-	/* 停止X坐标上的移动 */
-	setiXSpeed(0);
+	if (!mControllerListener){
+		return;
+	}
+	if (!isStartTouch){
+		return;
+	}
+	isStartTouch = false;
+	CCPoint touchLocation = pTouch->getLocationInView();
+	CCPoint endP = CCDirector::sharedDirector()->convertToGL(touchLocation);
+
+	if (startP.x - endP.x < -20){
+		mControllerListener->statusChangeTo(HeroStatus::RIGHT_FLY);
+	}
+	else if(startP.x - endP.x > 20){
+		mControllerListener->statusChangeTo(HeroStatus::LEFT_FLY);
+	}
+	//float maxLength = MAX(abs(startP.x - endP.x), abs(startP.y - endP.y));
 }
 
 void DirectController::registerWithTouchDispatcher()

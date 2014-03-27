@@ -8,11 +8,6 @@ class Rope : public CCNode
 {
 public:
 	Rope();
-	// 绳子最长长度
-	static const float MAXLINE;
-
-	// 绳子最短长度
-	static const float MINLINE;
 	// 初始化
 	virtual bool init();
 	// 获得绳子的碰撞区域
@@ -21,6 +16,8 @@ public:
 	void rollAction();
 	// 更新绳子效果
 	void update(float delta);
+	// 设置显示
+	void setShowLength();
 protected:
 	CCSprite* mSprite;
 	// 当前运动方向是否向下

@@ -22,30 +22,36 @@ MaoChong* MaoChong::createWithTiledMap(CCTMXTiledMap* map){
 	return maoChong;
 }
 
-bool MaoChong::initWithTileMap(CCTMXTiledMap* map){
+bool MaoChong::initWithTileMap(CCTMXTiledMap* map)
+{
 	this->mStatus = HeroStatus::PA;
 	this->map = map;
 	this->meta = map->layerNamed("meta");
-	this->meta->setVisible(false);
+	//this->meta->setVisible(false);
 
+	// ÉèÖÃmaochongnodeÎ»ÖÃ
 	CCTMXObjectGroup* objGroup = map->objectGroupNamed("objects");
 	CCDictionary* heroStartPointDic = objGroup->objectNamed("heroStartPoint");
 	float heroX = heroStartPointDic->valueForKey("x")->floatValue();
 	float heroY = heroStartPointDic->valueForKey("y")->floatValue();
+	this->setAnchorPoint(ccp(0.5, 1));	
+	this->setPosition(ccp(heroX, heroY));
 
+	// Ìí¼ÓheroÍ¼Æ¬
 	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("hero/hero.plist", "hero/hero.png");
 	CCSprite* heroSprite = CCSprite::createWithSpriteFrameName("chongPaFrame_0.png");
-
-	heroSprite->setPosition(ccp(heroX, heroY));
-
-	map->addChild(heroSprite, 10);
+	heroSprite->setAnchorPoint(ccp(0.5, 1));
+	heroSprite->setPosition(CCPointZero);
+	this->addChild(heroSprite);
+	map->addChild(this, 10);
 
 	setSprite(heroSprite);
 	return true;
 }
 
 
-void MaoChong::statusChangeTo(HeroStatus mStatus){
+void MaoChong::statusChangeTo(HeroStatus mStatus)
+{
 	switch (mStatus)
 	{
 	case PA:
