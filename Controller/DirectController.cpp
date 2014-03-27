@@ -42,7 +42,7 @@ bool DirectController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 		return false;
 	}
 	if (isStartTouch){
-		return;
+		return false;
 	}
 	isStartTouch = true;
 	/* 获取点击的坐标 */
@@ -85,10 +85,10 @@ void DirectController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 	CCPoint endP = CCDirector::sharedDirector()->convertToGL(touchLocation);
 
 	if (startP.x - endP.x < -20){
-		mControllerListener->statusChangeTo(HeroStatus::RIGHT_FLY);
+		//mControllerListener->statusChangeTo(HeroStatus::RIGHT_FLY);
 	}
 	else if(startP.x - endP.x > 20){
-		mControllerListener->statusChangeTo(HeroStatus::LEFT_FLY);
+		//mControllerListener->statusChangeTo(HeroStatus::LEFT_FLY);
 	}
 	//float maxLength = MAX(abs(startP.x - endP.x), abs(startP.y - endP.y));
 }

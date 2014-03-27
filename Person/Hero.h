@@ -20,8 +20,8 @@ public:
 	virtual void setSimplePosition(CCPoint c);
 	virtual CCPoint getCurPosition();
 	virtual void setViewPointByPlayer();
-	virtual void setStatus();
-	virtual void statusChangeTo(HeroStatus mStatus);
+	virtual void setStatus(HeroStatus mStatus);
+	virtual void statusChangeTo(HeroStatus mStatus) = 0;
 
 protected:
 	CCSprite* mSprite;

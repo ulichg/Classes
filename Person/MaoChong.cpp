@@ -22,6 +22,12 @@ MaoChong* MaoChong::createWithTiledMap(CCTMXTiledMap* map){
 	return maoChong;
 }
 
+
+void MaoChong::setSimplePosition(CCPoint c){
+
+}
+
+
 bool MaoChong::initWithTileMap(CCTMXTiledMap* map)
 {
 	this->mStatus = HeroStatus::PA;

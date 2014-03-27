@@ -7,7 +7,7 @@ using namespace cocos2d;
 
 class ControllerListener {
 public:
-	virtual void setSimplePosition(int x, int y) = 0;
+	virtual void setSimplePosition(CCPoint c) = 0;
 	virtual CCPoint getCurPosition() = 0;
 };
 

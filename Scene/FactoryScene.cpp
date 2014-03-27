@@ -75,10 +75,10 @@ bool FactoryScene::bindHeroToRope(Rope* rope){
 	{
 		return false;
 	}
-
 	CCPoint ropeP = rope->getPosition();
 	CCPoint heroP = hero->getPosition();
 
 	CCLog("Hero loc: %f %f", ropeP.x, heroP.y);
 	hero->setPosition(ropeP.x, heroP.y);
+	return true;
 }

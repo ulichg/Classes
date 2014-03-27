@@ -28,6 +28,15 @@ void Hero::setSprite(CCSprite* mSprite){
 	this->mSprite = mSprite;
 }
 
+void Hero::setSimplePosition(CCPoint c){
+
+}
+
+void Hero::setStatus(HeroStatus status){
+	this->mStatus = status;
+}
+
+
 void Hero::setViewPointByPlayer()
 {
 	if (mSprite == NULL) {
