@@ -52,6 +52,7 @@ void Rope::update(float delta)
 		
 	}
 	setShowLength();
+	//CCLog("length: %f", this->curLength);
 }
 
 void Rope::setShowLength(){
@@ -60,6 +61,7 @@ void Rope::setShowLength(){
 	mSprite->setPosition(CCPointZero);
 	this->addChild(this->mSprite);
 }
+
 
 
 

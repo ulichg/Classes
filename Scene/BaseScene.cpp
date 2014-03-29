@@ -1,7 +1,9 @@
 #include "BaseScene.h"
 #include "Data/GlobalVar.h"
+#include "Person/MaoChong.h"
 
 bool BaseScene::init(){
+	this->ropeArray = CCArray::create();
 	setMap(NULL);
 	return true;
 }
@@ -23,18 +25,4 @@ void BaseScene::setMap(CCTMXTiledMap* map){
 	}
 	this->map = map;
 	this->addChild(this->map, -1, MAP_TAG);
-}
-
-void BaseScene::bindControllerToHero(Controller* controller)
-{
-	if (!controller){
-		return;
-	}
-	if (!this->getChildByTag(CONTROLLER_TAG)){
-		this->removeChildByTag(CONTROLLER_TAG);
-	}
-
-	this->controller = controller;
-	this->hero->setController(controller);
-	this->addChild(controller, 0, CONTROLLER_TAG);
 }

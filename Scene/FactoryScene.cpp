@@ -1,8 +1,10 @@
 #include "FactoryScene.h"
+#include "Person/MaoChong.h"
+#include "Data/GlobalVar.h"
 
 bool FactoryScene::init(){
 	this->ropeArray = CCArray::create();
-
+	ropeArray->retain();
 	CCTMXTiledMap* map = CCTMXTiledMap::create("map/testMap.tmx");
 	setMap(map);
 	initHero();
@@ -76,9 +78,41 @@ bool FactoryScene::bindHeroToRope(Rope* rope){
 		return false;
 	}
 	CCPoint ropeP = rope->getPosition();
-	CCPoint heroP = hero->getPosition();
+	CCPoint heroP = this->hero->getPosition();
 
 	CCLog("Hero loc: %f %f", ropeP.x, heroP.y);
-	hero->setPosition(ropeP.x, heroP.y);
+	this->hero->setPosition(ropeP.x, heroP.y);
 	return true;
+}
+
+void FactoryScene::findRope(){
+	MaoChong* maoChong = (MaoChong*)hero;
+	CCLog("find rope");
+	Rope* targetRope = NULL;
+	// ¼ì²âÅöµ½ÄÄ¸ùÉþ×Ó
+	for (unsigned int i = 0; i < ropeArray->count(); i++){
+		Rope* r = (Rope*)ropeArray->objectAtIndex(i);
+		if (r->getPositionX() == maoChong->getPositionX()){
+			if (r->getCollideRect().containsPoint(maoChong->getPosition())){
+				targetRope = r;
+			}
+		}
+	}
+
+	if (targetRope){
+		bindHeroToRope(targetRope);
+		maoChong->statusChangeTo(HeroStatus::PA);
+	}
+	else {
+		maoChong->statusChangeTo(HeroStatus::FALL_DOWN);
+	}
+}
+
+FactoryScene::~FactoryScene(){
+	CCObject* o = NULL;
+	CCARRAY_FOREACH(ropeArray, o){
+		Rope* r = dynamic_cast<Rope*>(o);
+		r->release();
+	}
+	CC_SAFE_DELETE(ropeArray);
 }

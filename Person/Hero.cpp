@@ -25,14 +25,20 @@ float Min(float a, float b)
 }
 
 void Hero::setSprite(CCSprite* mSprite){
+	if (this->mSprite){
+		this->removeChild(this->mSprite);
+	}
+	mSprite->setAnchorPoint(ccp(0.5, 1));
+	mSprite->setPosition(CCPointZero);
 	this->mSprite = mSprite;
+	this->addChild(mSprite);
 }
 
 void Hero::setSimplePosition(CCPoint c){
 
 }
 
-void Hero::setStatus(HeroStatus status){
+void Hero::setStatus(int status){
 	this->mStatus = status;
 }
 
@@ -42,7 +48,7 @@ void Hero::setViewPointByPlayer()
 	if (mSprite == NULL) {
 		return;
 	}
-	CCLayer* parent = (CCLayer*)mSprite->getParent();
+	CCLayer* parent = (CCLayer*)this->getParent();
 
 	/* 地图方块数量 */
 	CCSize mapTiledNum = map->getMapSize();
@@ -59,18 +65,18 @@ void Hero::setViewPointByPlayer()
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 	/* 精灵的坐标 */
-	CCPoint spritePos = mSprite->getPosition();
+	CCPoint spritePos = this->getPosition();
 
 	/* 如果精灵坐标小于屏幕的一半，则取屏幕中点坐标，否则取精灵的坐标 */
 	float x = Max(spritePos.x, visibleSize.width / 2);
-	float y = Max(spritePos.y, visibleSize.height / 4);
+	float y = Max(spritePos.y, visibleSize.height / 3);
 
 	/* 如果x、y的坐标大于右上角的极限值，则取极限值的坐标（极限值是指不让地图超出屏幕造成出现黑边的极限坐标） */
 	x = Min(x, mapSize.width - visibleSize.width / 2);
-	y = Min(y, mapSize.height - visibleSize.height / 4 * 3);
+	y = Min(y, mapSize.height - visibleSize.height / 3 * 2);
 
 	CCPoint destPos = CCPoint(x, y);
-	CCPoint fixPos = CCPoint(visibleSize.width / 2, visibleSize.height / 4);
+	CCPoint fixPos = CCPoint(visibleSize.width / 2, visibleSize.height / 3);
 
 	/* 计算屏幕中点和所要移动的目的点之间的距离 */
 	CCPoint viewPos = ccpSub(fixPos, destPos);
@@ -94,8 +100,16 @@ CCPoint Hero::tileCoordForPosition(CCPoint pos){
 }
 
 void Hero::setController(Controller* controller){
+	if (this->mController){
+		map->removeChild(this->mController);
+		this->mController = NULL;
+	}
+	if (!controller){
+		return;
+	}
 	this->mController = controller;
-	//mController->setControllerListener(this);
+	this->mController->setControllerListener(this);
+	map->addChild(this->mController);
 }
 
 CCPoint Hero::getCurPosition(){

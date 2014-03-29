@@ -19,8 +19,8 @@ public:
 	bool bindHeroToRope(Rope* rope);
 	// 初始化hero
 	void initHero();
-protected:
-	// 绳子集合
-	CCArray* ropeArray;
+
+	void findRope();
+	~FactoryScene();
 };
 

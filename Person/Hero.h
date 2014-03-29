@@ -1,18 +1,13 @@
 #pragma once
 #include "Controller/Controller.h"
 #include "cocos2d.h"
+#include "HeroStatus.h"
 
 using namespace cocos2d;
 
 
-enum HeroStatus
-{
-	PA, LEFT_FLY, RIGHT_FLY, FALL_DOWN, BUTTERFLY
-};
-
-
 class Hero :
-	public CCNode
+	public CCNode, public ControllerListener
 {
 public:
 	virtual void setSprite(CCSprite* mSprite);
@@ -20,8 +15,8 @@ public:
 	virtual void setSimplePosition(CCPoint c);
 	virtual CCPoint getCurPosition();
 	virtual void setViewPointByPlayer();
-	virtual void setStatus(HeroStatus mStatus);
-	virtual void statusChangeTo(HeroStatus mStatus) = 0;
+	virtual void setStatus(int mStatus);
+	virtual void statusChangeTo(int mStatus) = 0;
 
 protected:
 	CCSprite* mSprite;
@@ -29,6 +24,6 @@ protected:
 	CCTMXLayer* meta;
 
 	Controller* mController;
-	HeroStatus mStatus;
+	int mStatus;
 	CCPoint tileCoordForPosition(CCPoint pos);
 };

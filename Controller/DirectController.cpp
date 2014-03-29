@@ -1,11 +1,10 @@
 #include "DirectController.h"
-
+#include "Data/GlobalVar.h"
 
 bool DirectController::init(){
 	this->isStartTouch = false;
 	this->startP = CCPointZero;
-	this->iXSpeed = 0;
-	this->iYSpeed = 0;
+	this->iYSpeed = SPEED;
 
 	/* ÉèÖÃÔÊÐí´¥ÆÁ */
 	this->setTouchEnabled(true);
@@ -16,15 +15,19 @@ bool DirectController::init(){
 
 void DirectController::update(float dt)
 {
-	/*if (mControllerListener == NULL) {
+	if (mControllerListener == NULL) {
 		return;
 	}
 
-	CCPoint curPos = mControllerListener->getCurPosition();
-	curPos.x += iXSpeed;
+	
+	MaoChong* hero = dynamic_cast<MaoChong*>(mControllerListener);
+	if (!hero){
+		CCLog("wrong 1");
+		return;
+	}
+	CCPoint curPos = hero->getCurPosition();
 	curPos.y += iYSpeed;
-
-	mControllerListener->setSimplePosition(curPos.x, curPos.y);*/
+	hero->setSimplePosition(curPos);
 }
 
 void DirectController::setiXSpeed(int iSpeed)
@@ -84,11 +87,15 @@ void DirectController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 	CCPoint touchLocation = pTouch->getLocationInView();
 	CCPoint endP = CCDirector::sharedDirector()->convertToGL(touchLocation);
 
+	MaoChong* hero = dynamic_cast<MaoChong*>(mControllerListener);
+	if (!hero){
+		return;
+	}
 	if (startP.x - endP.x < -20){
-		//mControllerListener->statusChangeTo(HeroStatus::RIGHT_FLY);
+		hero->statusChangeTo(HeroStatus::RIGHT_FLY);
 	}
 	else if(startP.x - endP.x > 20){
-		//mControllerListener->statusChangeTo(HeroStatus::LEFT_FLY);
+		hero->statusChangeTo(HeroStatus::LEFT_FLY);
 	}
 	//float maxLength = MAX(abs(startP.x - endP.x), abs(startP.y - endP.y));
 }

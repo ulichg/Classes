@@ -1,7 +1,7 @@
 #pragma once
 #include "Controller.h"
+#include "Person/MaoChong.h"
 #include "cocos2d.h"
-
 using namespace cocos2d;
 
 class DirectController :

@@ -9,4 +9,8 @@ const int CONTROLLER_TAG = 10002; // in scene
 const float MAXLINE = 400;
 const float MINLINE = 120;
 const float RODE_WIDTH = 32;
-const float SPEED = 10;
+const float SPEED = 2;
+const float THREELINES[3] = { 130, 323, 515 };
+
+// Ã«³æÐÅÏ¢
+const float TIME_HOR = 0.2f;
