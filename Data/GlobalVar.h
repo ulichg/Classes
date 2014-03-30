@@ -14,3 +14,4 @@ const float THREELINES[3] = { 130, 323, 515 };
 
 // Ã«³æÐÅÏ¢
 const float TIME_HOR = 0.2f;
+const float FALL_DOWN_SPEED = 5;

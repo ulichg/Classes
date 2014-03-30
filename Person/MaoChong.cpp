@@ -1,6 +1,7 @@
 #include "MaoChong.h"
 #include "Data/GlobalVar.h"
 #include "Scene/FactoryScene.h"
+#include "Controller/FallDownController.h"
 
 //// 有限状态机控制游戏过程中的控制器以及动画帧
 //void statucChangeTo(HeroStatus mStatus);
@@ -24,6 +25,10 @@ MaoChong* MaoChong::createWithTiledMap(CCTMXTiledMap* map){
 
 
 void MaoChong::setSimplePosition(CCPoint c){
+	if (c.x < 0 || c.y < 50)
+	{
+		return;
+	}
 	if (mSprite){
 		CCPoint tiledPos = tileCoordForPosition(c);
 		int tiledGid = meta->tileGIDAt(tiledPos);
@@ -98,7 +103,7 @@ void MaoChong::statusChangeTo(int mStatus)
 		this->setController(NULL); // 删除controller
 		break;
 	case HeroStatus::FALL_DOWN:
-		this->setController(NULL); // 删除controller
+		this->setController(FallDownController::create()); // 删除controller
 		break;
 	case HeroStatus::BUTTERFLY:
 		break;
@@ -184,9 +189,12 @@ void MaoChong::runStatusAnimation(){
 					  }
 					  return;
 	}
-		return;
 	case HeroStatus::FALL_DOWN:
-		return;
+	{
+					CCSprite* heroSprite = CCSprite::create("hero/chongFallDown_0.png");
+					setSprite(heroSprite);
+					return;
+	}
 	case HeroStatus::BUTTERFLY:
 		return;
 	default:

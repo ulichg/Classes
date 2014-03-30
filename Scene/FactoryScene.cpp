@@ -13,7 +13,8 @@ bool FactoryScene::init(){
 }
 
 void FactoryScene::initHero(){
-	MaoChong* maoChong = MaoChong::createWithTiledMap(map);
+	MaoChong* maoChong = 
+		MaoChong::createWithTiledMap(map);
 	maoChong->statusChangeTo(HeroStatus::PA);
 	hero = maoChong;
 }
