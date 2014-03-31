@@ -56,6 +56,8 @@ void MaoChong::setSimplePosition(CCPoint c){
 
 bool MaoChong::initWithTileMap(CCTMXTiledMap* map)
 {
+	this->heroLevel = HERO_LEVEL;
+	this->siNum = SI_START_NUM;
 	this->curLine = 0;
 	this->mStatus = HeroStatus::PA;
 	this->map = map;
@@ -78,7 +80,6 @@ bool MaoChong::initWithTileMap(CCTMXTiledMap* map)
 
 	return true;
 }
-
 
 void MaoChong::statusChangeTo(int mStatus)
 {
@@ -197,6 +198,12 @@ void MaoChong::runStatusAnimation(){
 	}
 	case HeroStatus::BUTTERFLY:
 		return;
+	case HeroStatus::SI_PA:
+	{
+					/*CCSprite* heroSprite = CCSprite::create("hero/chongFallDown_0.png");
+					setSprite(heroSprite);
+					return;*/
+	}
 	default:
 		return;
 	}

@@ -119,3 +119,15 @@ CCPoint Hero::getCurPosition(){
 
 	return CCPoint(0, 0);
 }
+
+int Hero::getHeroLevel(){
+	return heroLevel;
+}
+
+int Hero::getSiNum(){
+	return siNum;
+}
+
+void Hero::setSiNum(int i){
+	siNum = i;
+}

@@ -1,6 +1,7 @@
-#include "BaseScene.h"
+﻿#include "BaseScene.h"
 #include "Data/GlobalVar.h"
 #include "Person/MaoChong.h"
+#include "CodeConvert.h"
 
 bool BaseScene::init(){
 	this->ropeArray = CCArray::create();
@@ -25,4 +26,24 @@ void BaseScene::setMap(CCTMXTiledMap* map){
 	}
 	this->map = map;
 	this->addChild(this->map, -1, MAP_TAG);
+}
+
+void BaseScene::refreshSiNumLabel(){
+	CCLabelTTF* Label = (CCLabelTTF*)(map->getChildByTag(SINUM_TAG));
+	char str[100];
+	sprintf(str, "丝数：%i", hero->getSiNum());
+	
+	if (!Label){
+		Label = CCLabelTTF::create(UTEXT(str), "Arial", 50);
+		this->addChild(Label, 20, SINUM_TAG);
+	}
+	else {
+		Label->setString(str);
+	}
+
+	CCSize winsize = CCDirector::sharedDirector()->getWinSize();
+	CCSize lSize = Label->getContentSize();
+	float x = lSize.width / 3 * 2;
+	float y = winsize.height - lSize.height / 3 * 2;
+	Label->setPosition(ccp(x, y));
 }

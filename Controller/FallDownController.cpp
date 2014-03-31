@@ -44,6 +44,12 @@ bool FallDownController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 	if (!hero){
 		return true;
 	}
+	int siNum = hero->getSiNum();
+	if (hero->getSiNum() > 0){
+		hero->setSiNum(siNum - 1);
+		hero->statusChangeTo(HeroStatus::SI_PA);
+	}
+	return true;
 }
 
 void FallDownController::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)

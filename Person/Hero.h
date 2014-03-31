@@ -17,6 +17,9 @@ public:
 	virtual void setViewPointByPlayer();
 	virtual void setStatus(int mStatus);
 	virtual void statusChangeTo(int mStatus) = 0;
+	virtual int getHeroLevel();
+	virtual int getSiNum();
+	virtual void setSiNum(int i);
 
 protected:
 	CCSprite* mSprite;
@@ -26,4 +29,8 @@ protected:
 	Controller* mController;
 	int mStatus;
 	CCPoint tileCoordForPosition(CCPoint pos);
+	// 英雄等级
+	int heroLevel;
+	// 现有的可吐丝次数
+	int siNum;
 };

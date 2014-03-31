@@ -15,6 +15,7 @@ public:
 	virtual bool init();
 	virtual void setMap(CCTMXTiledMap* map);
 	static CCScene* scene();
+	void refreshSiNumLabel(); // 刷新丝数
 
 protected:
 	CCTMXTiledMap* map;
@@ -22,5 +23,5 @@ protected:
 	Controller* controller;
 	// 绳子集合
 	CCArray* ropeArray;
+	int siNum;
 };
-
