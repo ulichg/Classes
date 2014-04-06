@@ -18,14 +18,16 @@ public:
 	virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
 	virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
 
+	virtual void didAccelerate(CCAcceleration* pAccelerationValue);
 	/* 设置X方向的移动速度 */
-	void setiXSpeed(int iSpeed);
+	void setiXSpeed(float iSpeed);
 
 	/* 设置Y方向的移动速度*/
-	void setiYSpeed(int iSpeed);
+	void setiYSpeed(float iSpeed);
+
 private:
-	int iXSpeed;
-	int iYSpeed;
+	float iXSpeed;
+	float iYSpeed;
 	// 触摸开始点
 	CCPoint startP;
 	bool isStartTouch;

@@ -18,6 +18,8 @@ public:
 	void update(float delta);
 	// 设置显示
 	void setShowLength();
+	// 获得绳子长度
+	float getCurLength();
 protected:
 	CCSprite* mSprite;
 	// 当前运动方向是否向下

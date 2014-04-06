@@ -21,6 +21,18 @@ public:
 	void initHero();
 
 	void findRope();
+
+	/* 做爬丝处理*/
+	void doSiPa();
+	/* 获得毛虫吐丝后，可返回的绳子，返回NULL，辨明无法找到合适的。*/
+	Rope* getSiTouchRope();
+	/* 回调函数 */
+	void backToRope(float dt);
+
+	void setPa();
 	~FactoryScene();
+
+private:
+	Rope* targetRope;
 };
 

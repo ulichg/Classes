@@ -29,7 +29,7 @@ void BaseScene::setMap(CCTMXTiledMap* map){
 }
 
 void BaseScene::refreshSiNumLabel(){
-	CCLabelTTF* Label = (CCLabelTTF*)(map->getChildByTag(SINUM_TAG));
+	CCLabelTTF* Label = (CCLabelTTF*)(this->getChildByTag(SINUM_TAG));
 	char str[100];
 	sprintf(str, "丝数：%i", hero->getSiNum());
 	
@@ -38,7 +38,7 @@ void BaseScene::refreshSiNumLabel(){
 		this->addChild(Label, 20, SINUM_TAG);
 	}
 	else {
-		Label->setString(str);
+		Label->setString(UTEXT(str));
 	}
 
 	CCSize winsize = CCDirector::sharedDirector()->getWinSize();
@@ -46,4 +46,8 @@ void BaseScene::refreshSiNumLabel(){
 	float x = lSize.width / 3 * 2;
 	float y = winsize.height - lSize.height / 3 * 2;
 	Label->setPosition(ccp(x, y));
+}
+
+CCArray* BaseScene::getRopeArray(){
+	return ropeArray;
 }

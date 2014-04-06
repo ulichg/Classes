@@ -8,6 +8,8 @@ bool DirectController::init(){
 
 	/* 设置允许触屏 */
 	this->setTouchEnabled(true);
+	/* 设置运行加速传感器 */
+	this->setAccelerometerEnabled(true);
 
 	this->scheduleUpdate();
 	return true;
@@ -30,12 +32,12 @@ void DirectController::update(float dt)
 	hero->setSimplePosition(curPos);
 }
 
-void DirectController::setiXSpeed(int iSpeed)
+void DirectController::setiXSpeed(float iSpeed)
 {
 	this->iXSpeed = iSpeed;
 }
 
-void DirectController::setiYSpeed(int iSpeed)
+void DirectController::setiYSpeed(float iSpeed)
 {
 	this->iYSpeed = iSpeed;
 }
@@ -98,10 +100,52 @@ void DirectController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 		hero->statusChangeTo(HeroStatus::LEFT_FLY);
 	}
 	//float maxLength = MAX(abs(startP.x - endP.x), abs(startP.y - endP.y));
+
+	// 触发切换毛虫所在边
+	if (fabs(startP.x - endP.x) <= 20){
+		if (hero->getStatus() == HeroStatus::LEFT_PA){
+			hero->statusChangeTo(HeroStatus::RIGHT_PA);
+			hero->setCurLine(hero->getCurLine() + 1);
+		}
+		else if (hero->getStatus() == HeroStatus::RIGHT_PA){
+			hero->statusChangeTo(HeroStatus::LEFT_PA);
+			hero->setCurLine(hero->getCurLine() - 1);
+		}
+	}
 }
 
 void DirectController::registerWithTouchDispatcher()
 {
 	/* 注册触屏事件 */
 	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
+}
+
+void DirectController::didAccelerate(CCAcceleration* mAccelerationValue){
+	if (mControllerListener == NULL){
+		return;
+	}
+
+	MaoChong* maoChong = dynamic_cast<MaoChong*>(mControllerListener);
+	if (maoChong == NULL){
+		return;
+	}
+	CCDirector* pDtr = CCDirector::sharedDirector();
+
+	if (mAccelerationValue->x > 0.05)
+	{
+		// 向右偏
+		if (maoChong->getCurLine() % 2 == 0){
+			// 在左侧
+			maoChong->statusChangeTo(HeroStatus::RIGHT_PA);
+			maoChong->setCurLine(maoChong->getCurLine() + 1);
+		}
+	}
+	else if (mAccelerationValue->x < -0.05){
+		// 向左偏
+		if (maoChong->getCurLine() % 2 == 1){
+			// 在右侧
+			maoChong->statusChangeTo(HeroStatus::LEFT_PA);
+			maoChong->setCurLine(maoChong->getCurLine() - 1);
+		}
+	}
 }

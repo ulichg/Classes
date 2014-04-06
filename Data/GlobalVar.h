@@ -10,11 +10,13 @@ const int SINUM_TAG = 10003; // in map
 const float MAXLINE = 400;
 const float MINLINE = 120;
 const float RODE_WIDTH = 32;
-const float SPEED = 2;
+const float SPEED = 0.8f;
 const float THREELINES[3] = { 130, 323, 515 };
 
 // 毛虫信息
-const float TIME_HOR = 0.2f;
+const float TIME_HOR = 0.3f;
 const float FALL_DOWN_SPEED = 5;
-const int HERO_LEVEL = 1;
+const int HERO_LEVEL = 10;
 const int SI_START_NUM = (HERO_LEVEL / 2 + 1);
+const float SI_LENGTH = 640;
+const float BACK_TIME = 0.3f; // 毛虫掉落返回绳子时间

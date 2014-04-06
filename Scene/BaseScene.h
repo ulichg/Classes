@@ -16,7 +16,7 @@ public:
 	virtual void setMap(CCTMXTiledMap* map);
 	static CCScene* scene();
 	void refreshSiNumLabel(); // Ë¢ÐÂË¿Êý
-
+	CCArray* getRopeArray();
 protected:
 	CCTMXTiledMap* map;
 	Hero* hero;

@@ -56,13 +56,12 @@ void Rope::update(float delta)
 }
 
 void Rope::setShowLength(){
-	this->mSprite = CCSprite::create("map/rope.png", CCRectMake(0, 0, 32, this->curLength));
+	this->mSprite = CCSprite::create("map/rope.png", CCRectMake(0, 0, 14, this->curLength));
 	mSprite->setAnchorPoint(ccp(0.5, 1));
 	mSprite->setPosition(CCPointZero);
 	this->addChild(this->mSprite);
 }
 
-
-
-
-
+float Rope::getCurLength(){
+	return this->curLength;
+}

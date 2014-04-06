@@ -6,6 +6,7 @@ bool FactoryScene::init(){
 	this->ropeArray = CCArray::create();
 	ropeArray->retain();
 	CCTMXTiledMap* map = CCTMXTiledMap::create("map/testMap.tmx");
+	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("map/mapThing.plist", "map/mapThing.png");
 	setMap(map);
 	initHero();
 	setMapThings();
@@ -14,7 +15,6 @@ bool FactoryScene::init(){
 
 void FactoryScene::initHero(){
 	MaoChong* maoChong = MaoChong::createWithTiledMap(map);
-	maoChong->statusChangeTo(HeroStatus::PA);
 	hero = maoChong;
 }
 
@@ -42,7 +42,7 @@ void FactoryScene::setMapThings(){
 		float x = roundDic->valueForKey("x")->floatValue();
 		float y = roundDic->valueForKey("y")->floatValue();
 		
-		CCSprite* roundSprite = CCSprite::create("map/round.png");
+		CCSprite* roundSprite = CCSprite::createWithSpriteFrameName("round.png");
 		CCSize size = roundSprite->getContentSize();
 		//roundSprite->setPosition(ccp(x + size.width / 2, y + size.height / 2));
 		roundSprite->setPosition(ccp(x, y));
@@ -95,18 +95,115 @@ void FactoryScene::findRope(){
 	for (unsigned int i = 0; i < ropeArray->count(); i++){
 		Rope* r = (Rope*)ropeArray->objectAtIndex(i);
 		if (r->getPositionX() == maoChong->getPositionX()){
-			if (r->getCollideRect().containsPoint(maoChong->getPosition())){
+			if (r->getCollideRect().intersectsRect(maoChong->getCollideRect())){
 				targetRope = r;
 			}
 		}
 	}
 
 	if (targetRope){
+		// 找到绳子，绑定，并设置设置毛虫爬方向
 		bindHeroToRope(targetRope);
-		maoChong->statusChangeTo(HeroStatus::PA);
+		if (maoChong->getCurLine() % 2 == 1)
+		{
+			maoChong->statusChangeTo(HeroStatus::RIGHT_PA);
+		}
+		else
+		{
+			maoChong->statusChangeTo(HeroStatus::LEFT_PA);
+		}
 	}
 	else {
-		maoChong->statusChangeTo(HeroStatus::FALL_DOWN);
+		// 没碰到绳子，设置掉落方向
+		if (maoChong->getCurLine() % 2 == 1)
+		{
+			maoChong->statusChangeTo(HeroStatus::RIGHT_FALL_DOWN);
+		}
+		else
+		{
+			maoChong->statusChangeTo(HeroStatus::LEFT_FALL_DOWN);
+		}
+	}
+}
+
+Rope* FactoryScene::getSiTouchRope(){
+	Rope* targetRope = NULL;
+
+	if (!hero){
+		return NULL;
+	}
+
+	MaoChong* maoChong = dynamic_cast<MaoChong*>(hero);
+	if (!maoChong)
+	{
+		return NULL;
+	}
+	// 检测碰到哪根绳子
+	for (unsigned int i = 0; i < ropeArray->count(); i++){
+		Rope* r = (Rope*)ropeArray->objectAtIndex(i);
+		if (r->getPositionY() - hero->getPositionY() > 0 && r->getPositionY() - hero->getPositionY() < SI_LENGTH){
+			// 绳子垂直距离毛虫在丝的长度内
+			if (r->getPositionX() == THREELINES[maoChong->getCurLine() / 2]){
+				// 绳子位于对应列上
+				if (targetRope){
+					// 已存在，取近的
+					if (r->getPositionY() < targetRope->getPositionY()){
+						targetRope = r;
+					}
+				}
+				else {
+					targetRope = r;
+				}
+			}
+		}
+	}
+	return targetRope;
+}
+
+void FactoryScene::doSiPa()
+{
+	int siNum = hero->getSiNum();
+	if (siNum > 0)
+	{
+		this->targetRope = getSiTouchRope();
+		if (!targetRope)
+		{
+			hero->statusChangeTo(HeroStatus::DIE);
+			return;
+		}
+		else
+		{
+			hero->setSiNum(siNum - 1);
+			this->refreshSiNumLabel();
+			hero->statusChangeTo(HeroStatus::SI_PA);
+			scheduleOnce(schedule_selector(FactoryScene::backToRope), BACK_TIME);
+		}
+	}
+}
+
+void FactoryScene::backToRope(float dt){
+	CCLog("back to rope");
+	if (!this->targetRope){
+		return;
+	}
+	
+	float x = targetRope->getPositionX();
+	float y = targetRope->getPositionY() - targetRope->getCurLength() / 2;
+	CCMoveTo* move = CCMoveTo::create(0.3f, ccp(x, y));
+
+	CCActionInterval* siPa = CCSequence::create(move, CCCallFunc::create(this, callfunc_selector(FactoryScene::setPa)), NULL);
+	hero->runAction(siPa);
+}
+
+void FactoryScene::setPa(){
+	MaoChong* maoChong = dynamic_cast<MaoChong*>(hero);
+	if (maoChong->getCurLine() % 2 == 0)
+	{
+		hero->statusChangeTo(HeroStatus::LEFT_PA);
+	}
+	else
+	{
+		hero->statusChangeTo(HeroStatus::RIGHT_PA);
 	}
 }
 

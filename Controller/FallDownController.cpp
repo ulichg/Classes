@@ -1,5 +1,6 @@
 #include "FallDownController.h"
 #include "Data/GlobalVar.h"
+#include "Scene/FactoryScene.h"
 
 bool FallDownController::init(){
 	this->iYSpeed = FALL_DOWN_SPEED;
@@ -32,23 +33,19 @@ void FallDownController::setiYSpeed(int iSpeed)
 	this->iYSpeed = iSpeed;
 }
 
+
 bool FallDownController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
 	if (!mControllerListener){
 		return true;
 	}
-	CCPoint touchLocation = pTouch->getLocationInView();
-	CCPoint endP = CCDirector::sharedDirector()->convertToGL(touchLocation);
 
-	MaoChong* hero = dynamic_cast<MaoChong*>(mControllerListener);
-	if (!hero){
+	FactoryScene* fs = dynamic_cast<FactoryScene*>(this->getParent()->getParent());
+	if (!fs){
 		return true;
 	}
-	int siNum = hero->getSiNum();
-	if (hero->getSiNum() > 0){
-		hero->setSiNum(siNum - 1);
-		hero->statusChangeTo(HeroStatus::SI_PA);
-	}
+	fs->doSiPa();
+	
 	return true;
 }
 

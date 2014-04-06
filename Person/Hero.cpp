@@ -1,6 +1,5 @@
 #include "Hero.h"
 
-
 float Max(float a, float b)
 {
 	if (a > b)
@@ -34,6 +33,19 @@ void Hero::setSprite(CCSprite* mSprite){
 	this->addChild(mSprite);
 }
 
+void Hero::setArmature(CCArmature* mArmature){
+	if (mArmature == NULL){
+		this->removeChild(this->mArmature);
+		return;
+	}
+	if (this->mArmature){
+		this->removeChild(this->mArmature);
+	}
+	mArmature->setPosition(CCPointZero);
+	this->mArmature = mArmature;
+	this->addChild(mArmature);
+}
+
 void Hero::setSimplePosition(CCPoint c){
 
 }
@@ -45,7 +57,8 @@ void Hero::setStatus(int status){
 
 void Hero::setViewPointByPlayer()
 {
-	if (mSprite == NULL) {
+	/*if (mSprite == NULL) {*/
+	if (mArmature == NULL){
 		return;
 	}
 	CCLayer* parent = (CCLayer*)this->getParent();
@@ -102,6 +115,7 @@ CCPoint Hero::tileCoordForPosition(CCPoint pos){
 void Hero::setController(Controller* controller){
 	if (this->mController){
 		map->removeChild(this->mController);
+		this->mController->unscheduleAllSelectors();
 		this->mController = NULL;
 	}
 	if (!controller){
@@ -113,7 +127,8 @@ void Hero::setController(Controller* controller){
 }
 
 CCPoint Hero::getCurPosition(){
-	if (mSprite){
+	/*if (mSprite){*/
+	if (mArmature){
 		return this->getPosition();
 	}
 
@@ -130,4 +145,9 @@ int Hero::getSiNum(){
 
 void Hero::setSiNum(int i){
 	siNum = i;
+	
+}
+
+int Hero::getStatus(){
+	return mStatus;
 }
