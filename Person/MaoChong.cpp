@@ -27,6 +27,7 @@ MaoChong* MaoChong::createWithTiledMap(CCTMXTiledMap* map){
 void MaoChong::setSimplePosition(CCPoint c){
 	if (c.x < 0 || c.y < 50)
 	{
+		this->statusChangeTo(HeroStatus::DIE);
 		return;
 	}
 
@@ -133,7 +134,10 @@ void MaoChong::statusChangeTo(int mStatus)
 		}
 		this->setController(FallDownController::create()); // É¾³ýcontroller
 		break;
-	case HeroStatus::SI_PA:
+	case HeroStatus::DISAPPEAR:
+		this->setController(NULL);
+		break;
+	case HeroStatus::APPEAR:
 		this->setController(NULL);
 		break;
 	case HeroStatus::BUTTERFLY:
@@ -300,17 +304,22 @@ void MaoChong::runStatusAnimation(){
 	}
 	case HeroStatus::RIGHT_FALL_DOWN:
 	{
-								this->mArmature->getAnimation()->play("chongRightFly");
+								this->mArmature->getAnimation()->play("chongRightFallDown");
 								return;
 	}
 	case HeroStatus::LEFT_FALL_DOWN:
 	{
-								this->mArmature->getAnimation()->play("chongLeftFly");
+								this->mArmature->getAnimation()->play("chongLeftFallDown");
 								return;
 	}
-	case HeroStatus::SI_PA:
+	case HeroStatus::DISAPPEAR:
 	{
-							  this->mArmature->getAnimation()->play("chongLeftFly");
+							  this->mArmature->getAnimation()->play("chongDisappear");
+							  return;
+	}
+	case HeroStatus::APPEAR:
+	{
+							  this->mArmature->getAnimation()->play("chongAppear");
 							  return;
 	}
 	case HeroStatus::BUTTERFLY:
@@ -345,9 +354,9 @@ CCRect MaoChong::getCollideRect()
 	if (!this->mArmature){
 		return CCRectZero;
 	}
-#define COLLIDE_AREA_MINUS 5
+#define ADJUST_SIZE 5
 	// mArmtatureµÄ´óÐ¡
 	CCRect area = this->mArmature->boundingBox();
-	return CCRectMake(this->getPositionX() + area.getMinX(), this->getPositionY() + area.getMinY(), 
-		area.size.width - COLLIDE_AREA_MINUS, area.size.height - COLLIDE_AREA_MINUS);
+	return CCRectMake(this->getPositionX() + area.getMinX(), this->getPositionY() + area.getMaxY(), 
+		area.size.width, area.size.height);
 }

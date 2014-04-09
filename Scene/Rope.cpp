@@ -20,7 +20,7 @@ bool Rope::init()
 CCRect Rope::getCollideRect(){
 	CCSize size = this->mSprite->getContentSize();
 	if (this->getParent()){
-		return CCRectMake(this->getPositionX() - size.width / 2, this->getPositionY() - this->curLength, size.width, this->curLength);
+		return CCRectMake(this->getPositionX() - PNG_WIDTH / 2, this->getPositionY(), PNG_WIDTH, this->curLength);
 	}
 	return CCRectZero;
 }
@@ -56,10 +56,14 @@ void Rope::update(float delta)
 }
 
 void Rope::setShowLength(){
-	this->mSprite = CCSprite::create("map/rope.png", CCRectMake(0, 0, 14, this->curLength));
+	this->mSprite = CCSprite::create("map/rope.png", CCRectMake(0, PNG_HEIGHT - this->curLength, PNG_WIDTH, this->curLength));
 	mSprite->setAnchorPoint(ccp(0.5, 1));
 	mSprite->setPosition(CCPointZero);
 	this->addChild(this->mSprite);
+}
+
+bool Rope::is_Down(){
+	return isDown;
 }
 
 float Rope::getCurLength(){

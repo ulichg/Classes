@@ -9,9 +9,11 @@ const int SINUM_TAG = 10003; // in map
 // 绳子配置信息
 const float MAXLINE = 400;
 const float MINLINE = 120;
-const float RODE_WIDTH = 32;
+
 const float SPEED = 0.8f;
 const float THREELINES[3] = { 130, 323, 515 };
+const float PNG_HEIGHT = 960;
+const float PNG_WIDTH = 16;
 
 // 毛虫信息
 const float TIME_HOR = 0.3f;
@@ -19,4 +21,7 @@ const float FALL_DOWN_SPEED = 5;
 const int HERO_LEVEL = 10;
 const int SI_START_NUM = (HERO_LEVEL / 2 + 1);
 const float SI_LENGTH = 640;
-const float BACK_TIME = 0.3f; // 毛虫掉落返回绳子时间
+const float BACK_TIME = 0.5f; // 毛虫掉落返回绳子时间
+
+const float WIDTH = 480;
+const float HEIGHT = 960;

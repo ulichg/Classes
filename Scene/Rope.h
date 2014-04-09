@@ -20,6 +20,8 @@ public:
 	void setShowLength();
 	// 获得绳子长度
 	float getCurLength();
+	// 是否下落
+	bool is_Down();
 protected:
 	CCSprite* mSprite;
 	// 当前运动方向是否向下

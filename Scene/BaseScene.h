@@ -23,5 +23,8 @@ protected:
 	Controller* controller;
 	// 绳子集合
 	CCArray* ropeArray;
+	// 轮轴集合
+	CCArray* roundArray;
+	CCArray* coindArray;
 	int siNum;
 };

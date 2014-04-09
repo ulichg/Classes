@@ -17,7 +17,6 @@ void FallDownController::update(float dt)
 		return;
 	}
 
-	
 	MaoChong* hero = dynamic_cast<MaoChong*>(mControllerListener);
 	if (!hero){
 		CCLog("wrong 1");

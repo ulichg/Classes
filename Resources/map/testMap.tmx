@@ -21,7 +21,7 @@
  </layer>
  <layer name="meta" width="20" height="60">
   <data encoding="base64" compression="zlib">
-   eJzt06ENACAMBMAK9l+H9RBYME0RpHcJrryAbwTkzLFP1Xx1Hj1V90LP6MDe8CO9fcO7cpL9x9u96jyghwXeuBdh
+   eJzt06ENACAMRcEK9l+H9RBYDD9UkNwldVXNaxVk5tjTtQ8JncE9f8OPdNvDXTlJu9AT8NICTFoLsQ==
   </data>
  </layer>
  <objectgroup name="objects" width="20" height="60">
@@ -37,4 +37,52 @@
   <object name="round_6" x="130" y="232" width="26" height="21"/>
   <object name="round_7" x="515" y="231" width="26" height="21"/>
  </objectgroup>
+ <objectgroup name="lightObjects" width="20" height="60">
+  <object name="light_0" x="16" y="1765">
+   <properties>
+    <property name="loc" value="left"/>
+   </properties>
+  </object>
+  <object name="light_1" x="624" y="1531">
+   <properties>
+    <property name="loc" value="right"/>
+   </properties>
+  </object>
+  <object name="light_2" x="606" y="1220">
+   <properties>
+    <property name="loc" value="right"/>
+   </properties>
+  </object>
+  <object name="light_3" x="56" y="1207">
+   <properties>
+    <property name="loc" value="left"/>
+   </properties>
+  </object>
+  <object name="light_4" x="606" y="889">
+   <properties>
+    <property name="loc" value="right"/>
+   </properties>
+  </object>
+  <object name="light_5" x="57" y="876">
+   <properties>
+    <property name="loc" value="left"/>
+   </properties>
+  </object>
+  <object name="light_7" x="56" y="548">
+   <properties>
+    <property name="loc" value="left"/>
+   </properties>
+  </object>
+  <object name="light_6" x="606" y="554">
+   <properties>
+    <property name="loc" value="right"/>
+   </properties>
+  </object>
+  <object name="light_8" x="606" y="209">
+   <properties>
+    <property name="loc" value="right"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="coinObjects" width="20" height="60"/>
 </map>

@@ -1,5 +1,6 @@
 #include "DirectController.h"
 #include "Data/GlobalVar.h"
+#include "Scene/FactoryScene.h"
 
 bool DirectController::init(){
 	this->isStartTouch = false;
@@ -28,6 +29,7 @@ void DirectController::update(float dt)
 		return;
 	}
 	CCPoint curPos = hero->getCurPosition();
+	FactoryScene* fs = dynamic_cast<FactoryScene*>(hero->getParent()->getParent());
 	curPos.y += iYSpeed;
 	hero->setSimplePosition(curPos);
 }

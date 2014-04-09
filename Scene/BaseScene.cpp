@@ -5,6 +5,8 @@
 
 bool BaseScene::init(){
 	this->ropeArray = CCArray::create();
+	this->roundArray = CCArray::create();
+	coindArray = CCArray::create();
 	setMap(NULL);
 	return true;
 }

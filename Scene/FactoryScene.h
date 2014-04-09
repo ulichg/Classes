@@ -28,8 +28,11 @@ public:
 	Rope* getSiTouchRope();
 	/* 回调函数 */
 	void backToRope(float dt);
+	Rope* getTargetRope();
+	void setPa(float dt);
 
-	void setPa();
+	/* 碰撞检测之类 */
+	void update(float dt);
 	~FactoryScene();
 
 private:
