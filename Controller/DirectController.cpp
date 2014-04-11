@@ -28,10 +28,23 @@ void DirectController::update(float dt)
 		CCLog("wrong 1");
 		return;
 	}
+	setYSpeedAccordingToRope(hero->getCurRope());
 	CCPoint curPos = hero->getCurPosition();
 	FactoryScene* fs = dynamic_cast<FactoryScene*>(hero->getParent()->getParent());
 	curPos.y += iYSpeed;
 	hero->setSimplePosition(curPos);
+}
+
+void DirectController::setYSpeedAccordingToRope(Rope* r){
+	if (!r){
+		return;
+	}
+	if (r->is_Down()){
+		iYSpeed = SPEED;
+	}
+	else {
+		iYSpeed = SPEED * 2;
+	}
 }
 
 void DirectController::setiXSpeed(float iSpeed)

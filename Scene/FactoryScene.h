@@ -13,12 +13,12 @@ public:
 	static CCScene* scene();
 
 	//设置地图上的信息，绳子 轴
-	void setMapThings();
+	void setMapThings(CCTMXTiledMap* map);
 
 	// 把角色放置在绳子上,先放置，返回是否在绳子上
 	bool bindHeroToRope(Rope* rope);
 	// 初始化hero
-	void initHero();
+	void initHero(CCTMXTiledMap* map);
 
 	void findRope();
 
@@ -33,6 +33,16 @@ public:
 
 	/* 碰撞检测之类 */
 	void update(float dt);
+	/* 设置轴和绳子 */
+	void setRoundAndRope(CCTMXTiledMap* map);
+	/* 设置灯光 */
+	void setLight(CCTMXTiledMap* map);
+	/* 设置金币 */
+	void setCoin(CCTMXTiledMap* map);
+	/* 显示毛虫挂了后效果*/
+	void showDie();
+	void initMap();
+	void addMap(CCTMXTiledMap* map);
 	~FactoryScene();
 
 private:

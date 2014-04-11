@@ -19,10 +19,15 @@ bool Rope::init()
 
 CCRect Rope::getCollideRect(){
 	CCSize size = this->mSprite->getContentSize();
+	CCRect c = CCRectZero;
 	if (this->getParent()){
-		return CCRectMake(this->getPositionX() - PNG_WIDTH / 2, this->getPositionY(), PNG_WIDTH, this->curLength);
+		c = CCRectMake(this->getPositionX() - PNG_WIDTH / 2, this->getPositionY() - this->curLength, PNG_WIDTH, this->curLength);
 	}
-	return CCRectZero;
+	/*CCSprite* s = CCSprite::createWithSpriteFrameName("coin_front.png");
+	s->setScale(0.8f);
+	s->setPosition(ccp(c.getMaxX(), c.getMaxY()));
+	this->getParent()->addChild(s, 100);*/
+	return c;
 }
 
 void Rope::rollAction(){

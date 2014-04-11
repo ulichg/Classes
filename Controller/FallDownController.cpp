@@ -22,6 +22,7 @@ void FallDownController::update(float dt)
 		CCLog("wrong 1");
 		return;
 	}
+	iYSpeed += 0.098f;
 	CCPoint curPos = hero->getCurPosition();
 	curPos.y -= iYSpeed;
 	hero->setSimplePosition(curPos);

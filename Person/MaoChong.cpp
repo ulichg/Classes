@@ -33,24 +33,6 @@ void MaoChong::setSimplePosition(CCPoint c){
 
 	/*if (mSprite){*/
 	if (mArmature){
-		CCPoint tiledPos = tileCoordForPosition(c);
-		int tiledGid = meta->tileGIDAt(tiledPos);
-
-		if (tiledGid != 0){
-			CCDictionary* propertiesDict = map->propertiesForGID(tiledGid);
-
-			if (propertiesDict != NULL){
-				const CCString* prop = CCString::create("");
-				prop = propertiesDict->valueForKey("Collidable");
-
-				if (prop->m_sString.compare("true") == 0){
-					CCLog("collidable");
-					statusChangeTo(HeroStatus::LEFT_FALL_DOWN);
-					return;
-				}
-			}
-			
-		}
 		this->setPosition(c);
 		this->setViewPointByPlayer();
 	}
@@ -59,15 +41,13 @@ void MaoChong::setSimplePosition(CCPoint c){
 
 bool MaoChong::initWithTileMap(CCTMXTiledMap* map)
 {
+	this->curRope = NULL;
 	this->mArmature = NULL;
 	this->mController = NULL;
 	this->heroLevel = HERO_LEVEL;
-	this->siNum = SI_START_NUM;
 	this->curLine = 0;
 	this->mStatus = HeroStatus::LEFT_PA;
 	this->map = map;
-	this->meta = map->layerNamed("meta");
-	this->meta->setVisible(false);
 
 	// 设置maochongnode位置
 	CCTMXObjectGroup* objGroup = map->objectGroupNamed("objects");
@@ -349,14 +329,25 @@ void MaoChong::moveFinishedCallFunc()
 	scene->findRope();
 }
 
+void MaoChong::setCurRope(Rope* r){
+	this->curRope = r;
+}
+
+Rope* MaoChong::getCurRope(){
+	return this->curRope;
+}
+
 CCRect MaoChong::getCollideRect()
 {
 	if (!this->mArmature){
 		return CCRectZero;
 	}
-#define ADJUST_SIZE 5
+#define ADJUST_SIZE 30
 	// mArmtature的大小
 	CCRect area = this->mArmature->boundingBox();
-	return CCRectMake(this->getPositionX() + area.getMinX(), this->getPositionY() + area.getMaxY(), 
-		area.size.width, area.size.height);
+	
+
+	CCRect c = CCRectMake(this->getPositionX() + area.getMinX(), this->getPositionY() + area.getMinY(),
+		area.size.width, area.size.height - ADJUST_SIZE);
+	return c;
 }

@@ -1,4 +1,5 @@
 #include "Hero.h"
+#include "scene/BaseScene.h"
 
 float Max(float a, float b)
 {
@@ -84,9 +85,9 @@ void Hero::setViewPointByPlayer()
 	float x = Max(spritePos.x, visibleSize.width / 2);
 	float y = Max(spritePos.y, visibleSize.height / 3);
 
-	/* 如果x、y的坐标大于右上角的极限值，则取极限值的坐标（极限值是指不让地图超出屏幕造成出现黑边的极限坐标） */
+	///* 如果x、y的坐标大于右上角的极限值，则取极限值的坐标（极限值是指不让地图超出屏幕造成出现黑边的极限坐标） */
 	x = Min(x, mapSize.width - visibleSize.width / 2);
-	y = Min(y, mapSize.height - visibleSize.height / 3 * 2);
+	//y = Min(y, mapSize.height - visibleSize.height / 3 * 2);
 
 	CCPoint destPos = CCPoint(x, y);
 	CCPoint fixPos = CCPoint(visibleSize.width / 2, visibleSize.height / 3);
@@ -94,7 +95,11 @@ void Hero::setViewPointByPlayer()
 	/* 计算屏幕中点和所要移动的目的点之间的距离 */
 	CCPoint viewPos = ccpSub(fixPos, destPos);
 
-	parent->setPosition(viewPos);
+	BaseScene* bs = dynamic_cast<BaseScene*>(parent->getParent());
+	if (!bs){
+		return;
+	}
+	bs->setViewPoint(viewPos);
 }
 
 CCPoint Hero::tileCoordForPosition(CCPoint pos){
@@ -137,15 +142,6 @@ CCPoint Hero::getCurPosition(){
 
 int Hero::getHeroLevel(){
 	return heroLevel;
-}
-
-int Hero::getSiNum(){
-	return siNum;
-}
-
-void Hero::setSiNum(int i){
-	siNum = i;
-	
 }
 
 int Hero::getStatus(){

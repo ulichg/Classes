@@ -21,6 +21,6 @@ public:
 	/* 设置Y方向的移动速度*/
 	void setiYSpeed(int iSpeed);
 private:
-	int iYSpeed;
+	float iYSpeed;
 };
 

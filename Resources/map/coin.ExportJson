@@ -1,5 +1,5 @@
 {
-  "content_scale": 0.8,
+  "content_scale": 1.0,
   "armature_data": [
     {
       "strVersion": "1.3.0.0",
@@ -22,34 +22,6 @@
           "display_data": [
             {
               "name": "coin_front.png",
-              "displayType": 0,
-              "skin_data": [
-                {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "cX": 1.0,
-                  "cY": 1.0,
-                  "kX": 0.0,
-                  "kY": 0.0
-                }
-              ]
-            },
-            {
-              "name": "coin_left.png",
-              "displayType": 0,
-              "skin_data": [
-                {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "cX": 1.0,
-                  "cY": 1.0,
-                  "kX": 0.0,
-                  "kY": 0.0
-                }
-              ]
-            },
-            {
-              "name": "coin_right.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -98,28 +70,15 @@
                   "tweenFrame": true
                 },
                 {
-                  "dI": 1,
+                  "dI": 0,
                   "x": 0.0,
                   "y": 0.0,
                   "z": 0,
-                  "cX": 1.0,
+                  "cX": -1.00000012,
                   "cY": 1.0,
                   "kX": 0.0,
                   "kY": 0.0,
-                  "fi": 10,
-                  "twE": 0,
-                  "tweenFrame": true
-                },
-                {
-                  "dI": 2,
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0,
-                  "cX": 1.0,
-                  "cY": 1.0,
-                  "kX": 0.0,
-                  "kY": 0.0,
-                  "fi": 20,
+                  "fi": 15,
                   "twE": 0,
                   "tweenFrame": true
                 },

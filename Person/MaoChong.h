@@ -28,10 +28,14 @@ public:
 
 	/* 获得毛虫碰撞区域 */
 	CCRect getCollideRect();
+	Rope* getCurRope();
+	void setCurRope(Rope* r);
 private:
 	// 设置对应状态的animation
 	void runStatusAnimation();
 	// 当前所在线 ：从左到右依次为：0 - 5
 	int curLine;
+	/*虫子所在绳子,用于设置速度，directcontroller*/
+	Rope* curRope;
 };
 

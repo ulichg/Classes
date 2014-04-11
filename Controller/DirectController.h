@@ -1,6 +1,7 @@
 #pragma once
 #include "Controller.h"
 #include "Person/MaoChong.h"
+#include "Scene/Rope.h"
 #include "cocos2d.h"
 using namespace cocos2d;
 
@@ -24,7 +25,8 @@ public:
 
 	/* 设置Y方向的移动速度*/
 	void setiYSpeed(float iSpeed);
-
+	/* 根据毛虫所在绳子状态判定毛虫速度 */
+	void setYSpeedAccordingToRope(Rope* r);
 private:
 	float iXSpeed;
 	float iYSpeed;
