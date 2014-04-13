@@ -2,6 +2,7 @@
 #include "Data/GlobalVar.h"
 #include "Scene/FactoryScene.h"
 #include "Controller/FallDownController.h"
+#include "Controller/WaitController.h"
 
 //// 有限状态机控制游戏过程中的控制器以及动画帧
 //void statucChangeTo(HeroStatus mStatus);
@@ -65,17 +66,11 @@ bool MaoChong::initWithTileMap(CCTMXTiledMap* map)
 	}
 	setArmature(armature);
 	statusChangeTo(HeroStatus::LEFT_PA);
-	map->addChild(this, 10);
 	return true;
-}
-
-void MaoChong::dataLoaded(float percent){
-	
 }
 
 void MaoChong::statusChangeTo(int mStatus)
 {
-	FactoryScene* scene = (FactoryScene*) this->map->getParent();
 	switch (mStatus)
 	{
 	case HeroStatus::LEFT_PA:
@@ -126,10 +121,13 @@ void MaoChong::statusChangeTo(int mStatus)
 	case HeroStatus::DIE:
 		this->setController(NULL); // 删除controller
 		break;
+	case HeroStatus::WAIT:
+		this->setController(WaitController::create()); 
+		break;
 	default:
 		break;
 	}
-	CCLog("Change status: %i", mStatus);
+	CCLog("Change status: %s", HeroStatus::getName(mStatus)->getCString());
 	setStatus(mStatus);
 	runStatusAnimation();
 }
@@ -306,6 +304,19 @@ void MaoChong::runStatusAnimation(){
 		return;
 	case HeroStatus::DIE:
 		return;
+	case HeroStatus::WAIT:
+	{
+		if (curLine % 2 == 0){
+			this->mArmature->getAnimation()->play("chongLeftPa");
+			this->mArmature->getAnimation()->stop();
+		}
+		else {
+			this->mArmature->getAnimation()->play("chongRightPa");
+			this->mArmature->getAnimation()->stop();
+		}
+		curRope->unscheduleUpdate();
+		return;
+	}
 	default:
 		return;
 	}
@@ -322,7 +333,7 @@ void MaoChong::setCurLine(int c){
 
 void MaoChong::moveFinishedCallFunc()
 {
-	FactoryScene* scene = (FactoryScene*) this->map->getParent();
+	FactoryScene* scene = (FactoryScene*) getParent()->getParent();
 	if (!scene){
 		return;
 	}
@@ -347,7 +358,8 @@ CCRect MaoChong::getCollideRect()
 	CCRect area = this->mArmature->boundingBox();
 	
 
-	CCRect c = CCRectMake(this->getPositionX() + area.getMinX(), this->getPositionY() + area.getMinY(),
+	CCRect c = CCRectMake(this->getPositionX() + this->getParent()->getPositionX() + area.getMinX(),
+		this->getPositionY() + this->getParent()->getPositionY() + area.getMinY(),
 		area.size.width, area.size.height - ADJUST_SIZE);
 	return c;
 }

@@ -16,6 +16,8 @@ bool FactoryScene::init(){
 	this->mapArray = CCArray::create();
 	mapArray->retain();
 	curMap = 0;
+	this->thingLayer = CCLayer::create();
+	this->addChild(thingLayer, 10);
 
 	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("map/mapThing.plist", "map/mapThing.png");
 	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("map/coin0.plist", "map/coin0.png");
@@ -38,13 +40,22 @@ void FactoryScene::initMap(){
 }
 
 void FactoryScene::addMap(CCTMXTiledMap* map){
+	if (mapArray->count() > MAP_CACHE){
+		this->removeMap((CCTMXTiledMap*)mapArray->objectAtIndex(curMap - MAP_CACHE));
+	}
 	mapArray->addObject(map);
 	setMapThings(map);
-	this->addChild(map, mapArray->count());
+	if (curMap == 0){
+		
+	}
+	map->setPosition(ccp(-WIDTH, -HEIGHT));
+	this->addChild(map, 0);
 }
 
 void FactoryScene::initHero(CCTMXTiledMap* map){
 	MaoChong* maoChong = MaoChong::createWithTiledMap(map);
+	thingLayer->addChild(maoChong, 10);
+	maoChong->statusChangeTo(HeroStatus::LEFT_PA);
 	hero = maoChong;
 }
 
@@ -63,10 +74,8 @@ void FactoryScene::setMapThings(CCTMXTiledMap* map){
 	
 	// 设置转动的轴以及绳子
 	setRoundAndRope(map);
-
 	// 设置灯光
 	setLight(map);
-
 	// 设置金币
 	setCoin(map);
 }
@@ -96,18 +105,17 @@ void FactoryScene::setRoundAndRope(CCTMXTiledMap* map){
 		/*if (i != 0){
 			roundSprite->runAction(CCRepeatForever::create(rotate));
 		}*/
+		float minLength = roundDic->valueForKey("minLength")->floatValue();
+		float maxLength = roundDic->valueForKey("maxLength")->floatValue();
+		bool isDown = roundDic->valueForKey("isDown")->boolValue();
 		roundSprite->runAction(CCRepeatForever::create(rotate));
 		map->addChild(roundSprite, 1);
 
-		Rope* rope = new Rope();
+		Rope* rope = new Rope(isDown,minLength,maxLength);
 		ropeArray->addObject(rope);
 		rope->setPosition(ccp(x, y));
 
 		rope->rollAction();
-		if (ropeArray->count() == 1)
-		{
-			bindHeroToRope(rope);
-		}
 		//// 第一个绳子不动
 		//if (i != 0)
 		//{
@@ -119,6 +127,10 @@ void FactoryScene::setRoundAndRope(CCTMXTiledMap* map){
 		//}
 
 		map->addChild(rope, 0);
+		if (ropeArray->count() == 1)
+		{
+			bindHeroToRope(rope);
+		}
 	}
 }
 
@@ -175,6 +187,7 @@ void FactoryScene::setCoin(CCTMXTiledMap* map){
 
 		CCArmature* coin = CCArmature::create("coin");
 		coin->getAnimation()->play("coin_rotate");
+		/*CCSprite* coin = CCSprite::createWithSpriteFrameName("coin_front.png");*/
 		coin->setPosition(ccp(x, y));
 		coinArray->addObject(coin);
 		
@@ -188,43 +201,68 @@ void FactoryScene::update(float dt){
 	{
 		return;
 	}
-	for (unsigned int i = 0; i < roundArray->count(); i++){
-		CCSprite* r = (CCSprite*)roundArray->objectAtIndex(i);
-		if (r->getTextureRect().intersectsRect(maoChong->getCollideRect())){
-			if (maoChong->getCurLine() % 2 == 0){
-				maoChong->statusChangeTo(HeroStatus::LEFT_FALL_DOWN);
-			}
-			else {
-				maoChong->statusChangeTo(HeroStatus::RIGHT_FALL_DOWN);
+	if (maoChong->getStatus() == HeroStatus::LEFT_FALL_DOWN ||
+		maoChong->getStatus() == HeroStatus::RIGHT_FALL_DOWN)
+	{
+		return;
+	}
+
+	// 飞行过程中不检测齿轮
+	if (maoChong->getStatus() != HeroStatus::LEFT_FLY &&
+		maoChong->getStatus() != HeroStatus::RIGHT_FLY){
+		// 齿轮检测
+		for (unsigned int i = 0; i < roundArray->count(); i++){
+			CCSprite* r = (CCSprite*)roundArray->objectAtIndex(i);
+			/*CCLog("r: %f %f", r->getTextureRect().getMinX(), r->getTextureRect().getMinY());*/
+			CCRect rect = CCRectMake(r->getPositionX() - 20 + r->getParent()->getPositionX(),
+				r->getParent()->getPositionY() + r->getPositionY() - 20, 40, 40);
+
+			if (rect.intersectsRect(maoChong->getCollideRect())){
+				if (maoChong->getCurLine() % 2 == 0){
+					maoChong->statusChangeTo(HeroStatus::LEFT_FALL_DOWN);
+					return;
+				}
+				else {
+					maoChong->statusChangeTo(HeroStatus::RIGHT_FALL_DOWN);
+					return;
+				}
 			}
 		}
 	}
+	
 	// 金币检测
 	for (unsigned int i = 0; i < coinArray->count(); i++){
 		CCArmature* coin = (CCArmature*)coinArray->objectAtIndex(i);
-		CCRect coinRect = CCRectMake(-16 + coin->getPositionX(), 16 + coin->getPositionY(),
+		// 
+		CCRect coinRect = CCRectMake(-16 + coin->getPositionX() + coin->getParent()->getPositionX(), 
+			-16 + coin->getPositionY() + coin->getParent()->getPositionY(),
 			32, 32);
 		
 		if (coinRect.intersectsRect(maoChong->getCollideRect())){
+			coinArray->removeObject(coin);
+			coin->removeFromParent();
 			coinNum++;
 			refreshCoinNumLabel();
-			maoChong->getParent()->removeChild(coin);
-			coinArray->removeObject(coin);
-			return;
 		}
 	}
+	//y是所处map编号
+	int y = int(hero->getPositionY()) / int(2 * HEIGHT);
+	if ( y > curMap){
+		addRandomMap();
+	}
 }
+
 
 bool FactoryScene::bindHeroToRope(Rope* rope){
 	if (!rope || !this->hero)
 	{
 		return false;
 	}
-	CCPoint ropeP = rope->getPosition();
+	CCPoint ropeP = rope->getPosition() + rope->getParent()->getPosition();
 	CCPoint heroP = this->hero->getPosition();
 
 	//CCLog("Hero loc: %f %f", ropeP.x, heroP.y);
-	this->hero->setPosition(ropeP.x, heroP.y);
+	this->hero->setSimplePosition(ccp(ropeP.x, heroP.y));
 	MaoChong* maoChong = dynamic_cast<MaoChong*>(hero);
 	if (!maoChong)
 	{
@@ -241,7 +279,8 @@ void FactoryScene::findRope(){
 	// 检测碰到哪根绳子
 	for (unsigned int i = 0; i < ropeArray->count(); i++){
 		Rope* r = (Rope*)ropeArray->objectAtIndex(i);
-		if (r->getCollideRect().intersectsRect(maoChong->getCollideRect()) && r->getPositionY() > maoChong->getPositionY()){
+		if (r->getCollideRect().intersectsRect(maoChong->getCollideRect()) && 
+			r->getCollideRect().getMaxY() > maoChong->getCollideRect().getMaxY()){
 			if (targetRope){
 				// 已存在，取近的
 				if (r->getPositionY() < targetRope->getPositionY()){
@@ -291,22 +330,20 @@ Rope* FactoryScene::getSiTouchRope(){
 	{
 		return NULL;
 	}
-	// 检测碰到哪根绳子
+	float minLength = 10000;
+	// 检测应该回到最近的绳子
 	for (unsigned int i = 0; i < ropeArray->count(); i++){
 		Rope* r = (Rope*)ropeArray->objectAtIndex(i);
-		if (r->getPositionX() == THREELINES[maoChong->getCurLine() / 2] && r->getPositionY() > hero->getPositionY()){
-			if (targetRope){
-				// 已存在，取近的
-				if (r->getPositionY() < targetRope->getPositionY()){
-					targetRope = r;
-				}
-			}
-			else {
-				targetRope = r;
-			}
+		if ( r->getCollideRect().getMaxY() < maoChong->getCollideRect().getMaxY()){
+			continue;
+		}
+		float l = ccpDistance(r->getCollideRect().origin, maoChong->getCollideRect().origin);
+		if (l < minLength){
+			minLength = l;
+			targetRope = r;
 		}
 	}
-	return targetRope;
+	return maoChong->getCurRope();
 }
 
 void FactoryScene::doSiPa()
@@ -314,6 +351,7 @@ void FactoryScene::doSiPa()
 	if (siNum > 0)
 	{
 		this->targetRope = getSiTouchRope();
+		
 		if (!targetRope)
 		{
 			hero->statusChangeTo(HeroStatus::DIE);
@@ -321,6 +359,17 @@ void FactoryScene::doSiPa()
 		}
 		else
 		{
+			float x = targetRope->getPositionX();
+			if (x == THREELINES[0])
+			{
+				((MaoChong*)hero)->setCurLine(1);
+			}
+			else if (x == THREELINES[1]){
+				((MaoChong*)hero)->setCurLine(2);
+			}
+			else {
+				((MaoChong*)hero)->setCurLine(4);
+			}
 			siNum--;
 			this->refreshSiNumLabel();
 			hero->statusChangeTo(HeroStatus::DISAPPEAR);
@@ -335,9 +384,9 @@ void FactoryScene::backToRope(float dt){
 		return;
 	}
 	
-	float x = targetRope->getPositionX();
-	float y = targetRope->getPositionY() - targetRope->getCurLength() / 2;
-	this->hero->setPosition(ccp(x, y));
+	float x = targetRope->getPositionX() + targetRope->getParent()->getPositionX();
+	float y = targetRope->getPositionY() + targetRope->getParent()->getPositionY() - targetRope->getCurLength() / 2 - hero->getParent()->getPositionY();
+	this->hero->setSimplePosition(ccp(x, y));
 	this->hero->statusChangeTo(HeroStatus::APPEAR);
 	MaoChong* maoChong = dynamic_cast<MaoChong*>(hero);
 	if (!maoChong)
@@ -350,15 +399,7 @@ void FactoryScene::backToRope(float dt){
 }
 
 void FactoryScene::setPa(float dt){
-	MaoChong* maoChong = dynamic_cast<MaoChong*>(hero);
-	if (maoChong->getCurLine() % 2 == 0)
-	{
-		hero->statusChangeTo(HeroStatus::LEFT_PA);
-	}
-	else
-	{
-		hero->statusChangeTo(HeroStatus::RIGHT_PA);
-	}
+	hero->statusChangeTo(HeroStatus::WAIT);
 }
 
 Rope* FactoryScene::getTargetRope(){

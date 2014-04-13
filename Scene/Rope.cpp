@@ -1,27 +1,26 @@
 #include "Rope.h"
 #include "Data/GlobalVar.h"
 
-Rope::Rope(){
-	init();
+Rope::Rope(bool isDown, float minLength, float maxLength){
+	this->setAnchorPoint(ccp(0.5, 1));
+	this->isDown = isDown;
+	this->minLength = minLength;
+	this->maxLength = maxLength;
+	// 随机开始长度
+	curLength = (this->maxLength + this->minLength) / 2;
+	setShowLength();
+	return;
 }
 
-bool Rope::init()
-{
-	this->setAnchorPoint(ccp(0.5, 1));
-	// 随机方向
-	isDown = rand() % 2;
-
-	// 随机开始长度
-	curLength = rand() % (int)(MAXLINE - MINLINE) + MINLINE;
-	setShowLength();
-	return true;
+CCPoint Rope::getRealPosition(){
+	return ccp(getParent()->getPositionX() + this->getPositionX(), getParent()->getPositionY() + this->getPositionY());
 }
 
 CCRect Rope::getCollideRect(){
 	CCSize size = this->mSprite->getContentSize();
 	CCRect c = CCRectZero;
 	if (this->getParent()){
-		c = CCRectMake(this->getPositionX() - PNG_WIDTH / 2, this->getPositionY() - this->curLength, PNG_WIDTH, this->curLength);
+		c = CCRectMake(getRealPosition().x - PNG_WIDTH / 2,getRealPosition().y - this->curLength, PNG_WIDTH, this->curLength);
 	}
 	/*CCSprite* s = CCSprite::createWithSpriteFrameName("coin_front.png");
 	s->setScale(0.8f);
@@ -39,7 +38,7 @@ void Rope::update(float delta)
 	this->removeChild(this->mSprite);
 	if (isDown)
 	{
-		if (this->curLength >= MAXLINE){
+		if (this->curLength >= this->maxLength){
 			isDown = false;
 		}
 		else {
@@ -48,7 +47,7 @@ void Rope::update(float delta)
 	}
 	else
 	{
-		if (this->curLength <= MINLINE){
+		if (this->curLength <= this->minLength){
 			isDown = true;
 		}
 		else {

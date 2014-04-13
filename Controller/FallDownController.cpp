@@ -4,7 +4,7 @@
 
 bool FallDownController::init(){
 	this->iYSpeed = FALL_DOWN_SPEED;
-
+	this->startP = -1;
 	/* ÉèÖÃÔÊÐí´¥ÆÁ */
 	this->setTouchEnabled(true);
 	this->scheduleUpdate();
@@ -20,6 +20,14 @@ void FallDownController::update(float dt)
 	MaoChong* hero = dynamic_cast<MaoChong*>(mControllerListener);
 	if (!hero){
 		CCLog("wrong 1");
+		return;
+	}
+	float nowP = hero->getPositionY();
+	if (startP == -1){
+		startP = nowP;
+	}
+	else if (nowP - startP > HEIGHT / 2){
+		hero->statusChangeTo(HeroStatus::DIE);
 		return;
 	}
 	iYSpeed += 0.098f;

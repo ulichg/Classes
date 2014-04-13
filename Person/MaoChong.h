@@ -24,7 +24,6 @@ public:
 	int getCurLine();
 	void setCurLine(int c);
 	void moveFinishedCallFunc();
-	void dataLoaded(float percent);
 
 	/* »ñµÃÃ«³æÅö×²ÇøÓò */
 	CCRect getCollideRect();

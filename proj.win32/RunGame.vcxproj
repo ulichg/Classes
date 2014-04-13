@@ -133,6 +133,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Classes\Controller\Controller.cpp" />
     <ClCompile Include="..\Classes\Controller\DirectController.cpp" />
     <ClCompile Include="..\Classes\Controller\FallDownController.cpp" />
+    <ClCompile Include="..\Classes\Controller\WaitController.cpp" />
     <ClCompile Include="..\Classes\Person\Hero.cpp" />
     <ClCompile Include="..\Classes\Person\MaoChong.cpp" />
     <ClCompile Include="..\Classes\Scene\FactoryScene.cpp" />
@@ -147,6 +148,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Classes\Controller\ControllerListener.h" />
     <ClInclude Include="..\Classes\Controller\DirectController.h" />
     <ClInclude Include="..\Classes\Controller\FallDownController.h" />
+    <ClInclude Include="..\Classes\Controller\WaitController.h" />
     <ClInclude Include="..\Classes\Data\GlobalVar.h" />
     <ClInclude Include="..\Classes\Person\Hero.h" />
     <ClInclude Include="..\Classes\Person\HeroStatus.h" />

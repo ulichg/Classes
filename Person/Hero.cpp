@@ -1,5 +1,6 @@
 #include "Hero.h"
 #include "scene/BaseScene.h"
+#include "data/GlobalVar.h"
 
 float Max(float a, float b)
 {
@@ -64,17 +65,6 @@ void Hero::setViewPointByPlayer()
 	}
 	CCLayer* parent = (CCLayer*)this->getParent();
 
-	/* 地图方块数量 */
-	CCSize mapTiledNum = map->getMapSize();
-
-	/* 地图单个格子大小 */
-	CCSize tiledSize = map->getTileSize();
-
-	/* 地图大小 */
-	CCSize mapSize = CCSize(
-		mapTiledNum.width * tiledSize.width,
-		mapTiledNum.height * tiledSize.height);
-
 	/* 屏幕大小 */
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
@@ -86,7 +76,7 @@ void Hero::setViewPointByPlayer()
 	float y = Max(spritePos.y, visibleSize.height / 3);
 
 	///* 如果x、y的坐标大于右上角的极限值，则取极限值的坐标（极限值是指不让地图超出屏幕造成出现黑边的极限坐标） */
-	x = Min(x, mapSize.width - visibleSize.width / 2);
+	x = Min(x, WIDTH - visibleSize.width / 2);
 	//y = Min(y, mapSize.height - visibleSize.height / 3 * 2);
 
 	CCPoint destPos = CCPoint(x, y);
@@ -118,8 +108,13 @@ CCPoint Hero::tileCoordForPosition(CCPoint pos){
 }
 
 void Hero::setController(Controller* controller){
-	if (this->mController){
-		map->removeChild(this->mController);
+	CCLayer* layer = dynamic_cast<CCLayer*>(this->getParent());
+	if (!layer){
+		CCLog("wrong Hero::setController");
+		return;
+	}
+	if (this->mController && this->mController != controller){
+		layer->removeChild(this->mController);
 		this->mController->unscheduleAllSelectors();
 		this->mController = NULL;
 	}
@@ -128,7 +123,7 @@ void Hero::setController(Controller* controller){
 	}
 	this->mController = controller;
 	this->mController->setControllerListener(this);
-	map->addChild(this->mController);
+	layer->addChild(this->mController, 11, CONTROLLER_TAG);
 }
 
 CCPoint Hero::getCurPosition(){

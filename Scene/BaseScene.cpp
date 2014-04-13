@@ -4,24 +4,12 @@
 #include "CodeConvert.h"
 
 bool BaseScene::init(){
-	this->ropeArray = CCArray::create();
-	this->roundArray = CCArray::create();
-	this->coinArray = CCArray::create();
-	this->mapArray = CCArray::create();
-	setMap(NULL);
 	return true;
-}
-
-CCScene* BaseScene::scene(){
-	CCScene* mScene = CCScene::create();
-	BaseScene* mLayer = BaseScene::create();
-	mScene->addChild(mLayer);
-
-	return mScene;
 }
 
 void BaseScene::setViewPoint(CCPoint c){
 	CCObject* o = NULL;
+	thingLayer->setPosition(c);
 	for (unsigned int i = 0; i < mapArray->count(); i++)
 	{
 		CCTMXTiledMap* m = dynamic_cast<CCTMXTiledMap*>( mapArray->objectAtIndex(i));
@@ -31,6 +19,10 @@ void BaseScene::setViewPoint(CCPoint c){
 		}
 		m->setPosition(ccp(c.x, c.y + i * HEIGHT * 2));
 	}
+}
+
+void BaseScene::addMap(CCTMXTiledMap* map){
+
 }
 
 void BaseScene::setMap(CCTMXTiledMap* map){
@@ -44,8 +36,26 @@ void BaseScene::setMap(CCTMXTiledMap* map){
 	this->addChild(this->map, -1, MAP_TAG);
 }
 
-void BaseScene::addMap(CCTMXTiledMap* map){
+void BaseScene::removeMap(CCTMXTiledMap* map){
+	if (!map){
+		return;
+	}
+	map->removeFromParent();
+	CCObject* o = NULL;
+	CCARRAY_FOREACH(map->getChildren(), o){
+		ropeArray->removeObject(o);
+		roundArray->removeObject(o);
+	}
+}
 
+void BaseScene::addRandomMap(){
+	curMap++;
+	CCLog("add a new map");
+	int x = rand() % MAP_TYPE_NUM;
+	char str[100];
+	sprintf(str, "map/testMap_%i.tmx", x);
+	CCTMXTiledMap* map = CCTMXTiledMap::create(str);
+	addMap(map);
 }
 
 void BaseScene::refreshSiNumLabel(){

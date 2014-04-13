@@ -43,7 +43,7 @@ void DirectController::setYSpeedAccordingToRope(Rope* r){
 		iYSpeed = SPEED;
 	}
 	else {
-		iYSpeed = SPEED * 2;
+		iYSpeed = SPEED * 3;
 	}
 }
 

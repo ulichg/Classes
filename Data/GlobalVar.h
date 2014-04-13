@@ -11,10 +11,13 @@ const int COINNUM_TAG = 10004; // in map
 const float MAXLINE = 400;
 const float MINLINE = 120;
 
-const float SPEED = 0.6f;
+const float SPEED = 0.8f;
 const float THREELINES[3] = { 130, 323, 515 };
 const float PNG_HEIGHT = 960;
 const float PNG_WIDTH = 16;
+
+// 蝴蝶信息
+const float FLY_SPEED = 20.0f;
 
 // 毛虫信息
 const float TIME_HOR = 0.3f;
@@ -24,5 +27,9 @@ const int SI_START_NUM = (HERO_LEVEL / 2 + 1);
 const float SI_LENGTH = 640;
 const float BACK_TIME = 0.2f; // 毛虫掉落返回绳子时间
 
+// 地图信息
 const float WIDTH = 640;
 const float HEIGHT = 960;
+const float DOWN_LENGTH = HEIGHT / 2;
+const int MAP_TYPE_NUM = 2;
+const int MAP_CACHE = 3; // 地图缓存个数
