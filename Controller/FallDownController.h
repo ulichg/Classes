@@ -1,15 +1,14 @@
 #pragma once
 #include "Controller.h"
 #include "Person/MaoChong.h"
-#include "Scene/Rope.h"
 #include "cocos2d.h"
 using namespace cocos2d;
 
-class DirectController :
+class FallDownController :
 	public Controller
 {
 public:
-	CREATE_FUNC(DirectController);
+	CREATE_FUNC(FallDownController);
 	virtual bool init();
 	virtual void update(float dt);
 
@@ -19,19 +18,11 @@ public:
 	virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
 	virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
 
-	virtual void didAccelerate(CCAcceleration* pAccelerationValue);
-	/* 设置X方向的移动速度 */
-	void setiXSpeed(float iSpeed);
-
 	/* 设置Y方向的移动速度*/
-	void setiYSpeed(float iSpeed);
-	/* 根据毛虫所在绳子状态判定毛虫速度 */
-	void setYSpeedAccordingToRope(Rope* r);
+	void setiYSpeed(int iSpeed);
 private:
-	float iXSpeed;
 	float iYSpeed;
-	// 触摸开始点
-	CCPoint startP;
-	bool isStartTouch;
+	// 开始掉落的高度
+	float startP;
 };
 

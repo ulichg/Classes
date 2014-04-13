@@ -1,5 +1,6 @@
 #include "Hero.h"
-
+#include "scene/BaseScene.h"
+#include "data/GlobalVar.h"
 
 float Max(float a, float b)
 {
@@ -34,6 +35,19 @@ void Hero::setSprite(CCSprite* mSprite){
 	this->addChild(mSprite);
 }
 
+void Hero::setArmature(CCArmature* mArmature){
+	if (mArmature == NULL){
+		this->removeChild(this->mArmature);
+		return;
+	}
+	if (this->mArmature){
+		this->removeChild(this->mArmature);
+	}
+	mArmature->setPosition(CCPointZero);
+	this->mArmature = mArmature;
+	this->addChild(mArmature);
+}
+
 void Hero::setSimplePosition(CCPoint c){
 
 }
@@ -45,21 +59,11 @@ void Hero::setStatus(int status){
 
 void Hero::setViewPointByPlayer()
 {
-	if (mSprite == NULL) {
+	/*if (mSprite == NULL) {*/
+	if (mArmature == NULL){
 		return;
 	}
 	CCLayer* parent = (CCLayer*)this->getParent();
-
-	/* 地图方块数量 */
-	CCSize mapTiledNum = map->getMapSize();
-
-	/* 地图单个格子大小 */
-	CCSize tiledSize = map->getTileSize();
-
-	/* 地图大小 */
-	CCSize mapSize = CCSize(
-		mapTiledNum.width * tiledSize.width,
-		mapTiledNum.height * tiledSize.height);
 
 	/* 屏幕大小 */
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
@@ -71,9 +75,9 @@ void Hero::setViewPointByPlayer()
 	float x = Max(spritePos.x, visibleSize.width / 2);
 	float y = Max(spritePos.y, visibleSize.height / 3);
 
-	/* 如果x、y的坐标大于右上角的极限值，则取极限值的坐标（极限值是指不让地图超出屏幕造成出现黑边的极限坐标） */
-	x = Min(x, mapSize.width - visibleSize.width / 2);
-	y = Min(y, mapSize.height - visibleSize.height / 3 * 2);
+	///* 如果x、y的坐标大于右上角的极限值，则取极限值的坐标（极限值是指不让地图超出屏幕造成出现黑边的极限坐标） */
+	x = Min(x, WIDTH - visibleSize.width / 2);
+	//y = Min(y, mapSize.height - visibleSize.height / 3 * 2);
 
 	CCPoint destPos = CCPoint(x, y);
 	CCPoint fixPos = CCPoint(visibleSize.width / 2, visibleSize.height / 3);
@@ -81,7 +85,11 @@ void Hero::setViewPointByPlayer()
 	/* 计算屏幕中点和所要移动的目的点之间的距离 */
 	CCPoint viewPos = ccpSub(fixPos, destPos);
 
-	parent->setPosition(viewPos);
+	BaseScene* bs = dynamic_cast<BaseScene*>(parent->getParent());
+	if (!bs){
+		return;
+	}
+	bs->setViewPoint(viewPos);
 }
 
 CCPoint Hero::tileCoordForPosition(CCPoint pos){
@@ -100,8 +108,14 @@ CCPoint Hero::tileCoordForPosition(CCPoint pos){
 }
 
 void Hero::setController(Controller* controller){
-	if (this->mController){
-		map->removeChild(this->mController);
+	CCLayer* layer = dynamic_cast<CCLayer*>(this->getParent());
+	if (!layer){
+		CCLog("wrong Hero::setController");
+		return;
+	}
+	if (this->mController && this->mController != controller){
+		layer->removeChild(this->mController);
+		this->mController->unscheduleAllSelectors();
 		this->mController = NULL;
 	}
 	if (!controller){
@@ -109,13 +123,22 @@ void Hero::setController(Controller* controller){
 	}
 	this->mController = controller;
 	this->mController->setControllerListener(this);
-	map->addChild(this->mController);
+	layer->addChild(this->mController, 11, CONTROLLER_TAG);
 }
 
 CCPoint Hero::getCurPosition(){
-	if (mSprite){
+	/*if (mSprite){*/
+	if (mArmature){
 		return this->getPosition();
 	}
 
 	return CCPoint(0, 0);
+}
+
+int Hero::getHeroLevel(){
+	return heroLevel;
+}
+
+int Hero::getStatus(){
+	return mStatus;
 }

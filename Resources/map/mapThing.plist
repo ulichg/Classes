@@ -4,31 +4,31 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>chongPaFrame_0.png</key>
+            <key>rope.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{50,200}}</string>
+                <string>{{2,68},{14,441}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{50,200}}</string>
+                <string>{{0,0},{14,441}}</string>
                 <key>sourceSize</key>
-                <string>{50,200}</string>
+                <string>{14,441}</string>
             </dict>
-            <key>chongPaFrame_1.png</key>
+            <key>round.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{54,2},{64,122}}</string>
+                <string>{{2,2},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{64,122}}</string>
+                <string>{{0,0},{64,64}}</string>
                 <key>sourceSize</key>
-                <string>{64,122}</string>
+                <string>{64,64}</string>
             </dict>
         </dict>
         <key>metadata</key>
@@ -36,13 +36,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>hero.png</string>
+            <string>mapThing.png</string>
             <key>size</key>
-            <string>{128,256}</string>
+            <string>{128,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:7c49cc505d4c1491c54b52a992cc88e9$</string>
+            <string>$TexturePacker:SmartUpdate:f9272b5e7c073d2c8841131286b141f1$</string>
             <key>textureFileName</key>
-            <string>hero.png</string>
+            <string>mapThing.png</string>
         </dict>
     </dict>
 </plist>

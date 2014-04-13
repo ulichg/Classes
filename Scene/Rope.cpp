@@ -1,28 +1,32 @@
 #include "Rope.h"
 #include "Data/GlobalVar.h"
 
-Rope::Rope(){
-	init();
+Rope::Rope(bool isDown, float minLength, float maxLength){
+	this->setAnchorPoint(ccp(0.5, 1));
+	this->isDown = isDown;
+	this->minLength = minLength;
+	this->maxLength = maxLength;
+	// 随机开始长度
+	curLength = (this->maxLength + this->minLength) / 2;
+	setShowLength();
+	return;
 }
 
-bool Rope::init()
-{
-	this->setAnchorPoint(ccp(0.5, 1));
-	// 随机方向
-	isDown = rand() % 2;
-
-	// 随机开始长度
-	curLength = rand() % (int)(MAXLINE - MINLINE) + MINLINE;
-	setShowLength();
-	return true;
+CCPoint Rope::getRealPosition(){
+	return ccp(getParent()->getPositionX() + this->getPositionX(), getParent()->getPositionY() + this->getPositionY());
 }
 
 CCRect Rope::getCollideRect(){
 	CCSize size = this->mSprite->getContentSize();
+	CCRect c = CCRectZero;
 	if (this->getParent()){
-		return CCRectMake(this->getPositionX() - size.width / 2, this->getPositionY() - this->curLength, size.width, this->curLength);
+		c = CCRectMake(getRealPosition().x - PNG_WIDTH / 2,getRealPosition().y - this->curLength, PNG_WIDTH, this->curLength);
 	}
-	return CCRectZero;
+	/*CCSprite* s = CCSprite::createWithSpriteFrameName("coin_front.png");
+	s->setScale(0.8f);
+	s->setPosition(ccp(c.getMaxX(), c.getMaxY()));
+	this->getParent()->addChild(s, 100);*/
+	return c;
 }
 
 void Rope::rollAction(){
@@ -34,7 +38,7 @@ void Rope::update(float delta)
 	this->removeChild(this->mSprite);
 	if (isDown)
 	{
-		if (this->curLength >= MAXLINE){
+		if (this->curLength >= this->maxLength){
 			isDown = false;
 		}
 		else {
@@ -43,7 +47,7 @@ void Rope::update(float delta)
 	}
 	else
 	{
-		if (this->curLength <= MINLINE){
+		if (this->curLength <= this->minLength){
 			isDown = true;
 		}
 		else {
@@ -56,13 +60,16 @@ void Rope::update(float delta)
 }
 
 void Rope::setShowLength(){
-	this->mSprite = CCSprite::create("map/rope.png", CCRectMake(0, 0, 32, this->curLength));
+	this->mSprite = CCSprite::create("map/rope.png", CCRectMake(0, PNG_HEIGHT - this->curLength, PNG_WIDTH, this->curLength));
 	mSprite->setAnchorPoint(ccp(0.5, 1));
 	mSprite->setPosition(CCPointZero);
 	this->addChild(this->mSprite);
 }
 
+bool Rope::is_Down(){
+	return isDown;
+}
 
-
-
-
+float Rope::getCurLength(){
+	return this->curLength;
+}
