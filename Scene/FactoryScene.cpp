@@ -5,6 +5,7 @@
 bool FactoryScene::init(){
 	siNum = SI_START_NUM;
 	coinNum = 0;
+	distance = 0;
 	this->hero = NULL;
 	this->targetRope = NULL;
 	this->ropeArray = CCArray::create();
@@ -27,6 +28,7 @@ bool FactoryScene::init(){
 	refreshSiNumLabel();
 	refreshCoinNumLabel();
 	scheduleUpdate();
+	schedule(schedule_selector(FactoryScene::updateDistance), 0.1f);
 	return true;
 }
 
@@ -84,11 +86,13 @@ void FactoryScene::setMapThings(CCTMXTiledMap* map){
 void FactoryScene::setRoundAndRope(CCTMXTiledMap* map){
 	CCTMXObjectGroup* objGroup = map->objectGroupNamed("roundObjects");
 	int length = objGroup->getObjects()->count();
-	char str[100];
-	for (int i = 0; i < length; i++)
-	{
-		sprintf(str, "round_%i", i);
-		CCDictionary* roundDic = objGroup->objectNamed(str);
+	CCObject* o = NULL;
+	CCARRAY_FOREACH(objGroup->getObjects(), o){
+		CCDictionary* roundDic = dynamic_cast<CCDictionary*>(o);
+		if (!o){
+			CCLog("wrong FactoryScene::setCoin");
+			return;
+		}
 		float x = roundDic->valueForKey("x")->floatValue();
 		float y = roundDic->valueForKey("y")->floatValue();
 
@@ -137,11 +141,13 @@ void FactoryScene::setRoundAndRope(CCTMXTiledMap* map){
 void FactoryScene::setLight(CCTMXTiledMap* map){
 	CCTMXObjectGroup* objGroup1 = map->objectGroupNamed("lightObjects");
 	int length1 = objGroup1->getObjects()->count();
-	char str1[100];
-	for (int i = 0; i < length1; i++)
-	{
-		sprintf(str1, "light_%i", i);
-		CCDictionary* lightDic = objGroup1->objectNamed(str1);
+	CCObject* o = NULL;
+	CCARRAY_FOREACH(objGroup1->getObjects(), o){
+		CCDictionary* lightDic = dynamic_cast<CCDictionary*>(o);
+		if (!o){
+			CCLog("wrong FactoryScene::setCoin");
+			return;
+		}
 		float x = lightDic->valueForKey("x")->floatValue();
 		float y = lightDic->valueForKey("y")->floatValue();
 
@@ -172,16 +178,52 @@ void FactoryScene::setLight(CCTMXTiledMap* map){
 		CCSequence* se = CCSequence::create(ac1, ac1->reverse(), NULL);
 		light->runAction(CCRepeatForever::create(se));
 	}
+	//for (int i = 0; i < length1; i++)
+	//{
+	//	sprintf(str1, "light_%i", i);
+	//	CCDictionary* lightDic = objGroup1->objectNamed(str1);
+	//	float x = lightDic->valueForKey("x")->floatValue();
+	//	float y = lightDic->valueForKey("y")->floatValue();
+
+	//	CCSprite* light = CCSprite::create("map/light.png");
+	//	CCSprite* led = CCSprite::create("map/LED.png");
+
+	//	// 调整灯方向
+	//	const CCString* prop = CCString::create("");
+	//	prop = lightDic->valueForKey("loc");
+	//	led->setAnchorPoint(ccp(1, 0.5));
+	//	light->setAnchorPoint(ccp(1, 0.5));
+	//	if (prop->m_sString.compare("left") == 0){
+	//		led->setScaleX(-1);
+	//	}
+	//	else {
+	//		led->setScaleX(1);
+	//	}
+	//	led->setPosition(ccp(x, y));
+	//	light->setPosition(ccp(0, led->getContentSize().height / 2));
+	//	led->addChild(light, 1);
+
+	//	map->addChild(led, 20);
+
+	//	/*CCActionInterval* blink = CCBlink::create(rand() % 3 + 1, 1);
+	//	light->runAction(CCRepeatForever::create(blink));*/
+
+	//	CCActionInterval* ac1 = CCFadeOut::create(rand() % 10 / float(10) + 1);
+	//	CCSequence* se = CCSequence::create(ac1, ac1->reverse(), NULL);
+	//	light->runAction(CCRepeatForever::create(se));
+	//}
 }
 
 void FactoryScene::setCoin(CCTMXTiledMap* map){
 	CCTMXObjectGroup* objGroup = map->objectGroupNamed("coinObjects");
 	int length = objGroup->getObjects()->count();
-	char str[100];
-	for (int i = 0; i < length; i++)
-	{
-		sprintf(str, "coin_%i", i);
-		CCDictionary* lightDic = objGroup->objectNamed(str);
+	CCObject* o = NULL;
+	CCARRAY_FOREACH(objGroup->getObjects(), o){
+		CCDictionary* lightDic = dynamic_cast<CCDictionary*>(o);
+		if (!o){
+			CCLog("wrong FactoryScene::setCoin");
+			return;
+		}
 		float x = lightDic->valueForKey("x")->floatValue();
 		float y = lightDic->valueForKey("y")->floatValue();
 
@@ -190,9 +232,24 @@ void FactoryScene::setCoin(CCTMXTiledMap* map){
 		/*CCSprite* coin = CCSprite::createWithSpriteFrameName("coin_front.png");*/
 		coin->setPosition(ccp(x, y));
 		coinArray->addObject(coin);
-		
+
 		map->addChild(coin, 19);
 	}
+	//for (int i = 0; i < length; i++)
+	//{
+	//	sprintf(str, "coin_%i", i);
+	//	CCDictionary* lightDic = objGroup->objectNamed(str);
+	//	float x = lightDic->valueForKey("x")->floatValue();
+	//	float y = lightDic->valueForKey("y")->floatValue();
+
+	//	CCArmature* coin = CCArmature::create("coin");
+	//	coin->getAnimation()->play("coin_rotate");
+	//	/*CCSprite* coin = CCSprite::createWithSpriteFrameName("coin_front.png");*/
+	//	coin->setPosition(ccp(x, y));
+	//	coinArray->addObject(coin);
+	//	
+	//	map->addChild(coin, 19);
+	//}
 }
 
 void FactoryScene::update(float dt){
@@ -206,29 +263,28 @@ void FactoryScene::update(float dt){
 	{
 		return;
 	}
+	//// 飞行过程中不检测齿轮
+	//if (maoChong->getStatus() != HeroStatus::LEFT_FLY &&
+	//	maoChong->getStatus() != HeroStatus::RIGHT_FLY){
+	//	// 齿轮检测
+	//	for (unsigned int i = 0; i < roundArray->count(); i++){
+	//		CCSprite* r = (CCSprite*)roundArray->objectAtIndex(i);
+	//		/*CCLog("r: %f %f", r->getTextureRect().getMinX(), r->getTextureRect().getMinY());*/
+	//		CCRect rect = CCRectMake(r->getPositionX() - 20 + r->getParent()->getPositionX(),
+	//			r->getParent()->getPositionY() + r->getPositionY() - 20, 40, 40);
 
-	// 飞行过程中不检测齿轮
-	if (maoChong->getStatus() != HeroStatus::LEFT_FLY &&
-		maoChong->getStatus() != HeroStatus::RIGHT_FLY){
-		// 齿轮检测
-		for (unsigned int i = 0; i < roundArray->count(); i++){
-			CCSprite* r = (CCSprite*)roundArray->objectAtIndex(i);
-			/*CCLog("r: %f %f", r->getTextureRect().getMinX(), r->getTextureRect().getMinY());*/
-			CCRect rect = CCRectMake(r->getPositionX() - 20 + r->getParent()->getPositionX(),
-				r->getParent()->getPositionY() + r->getPositionY() - 20, 40, 40);
-
-			if (rect.intersectsRect(maoChong->getCollideRect())){
-				if (maoChong->getCurLine() % 2 == 0){
-					maoChong->statusChangeTo(HeroStatus::LEFT_FALL_DOWN);
-					return;
-				}
-				else {
-					maoChong->statusChangeTo(HeroStatus::RIGHT_FALL_DOWN);
-					return;
-				}
-			}
-		}
-	}
+	//		if (rect.intersectsRect(maoChong->getCollideRect())){
+	//			if (maoChong->getCurLine() % 2 == 0){
+	//				maoChong->statusChangeTo(HeroStatus::LEFT_FALL_DOWN);
+	//				return;
+	//			}
+	//			else {
+	//				maoChong->statusChangeTo(HeroStatus::RIGHT_FALL_DOWN);
+	//				return;
+	//			}
+	//		}
+	//	}
+	//}
 	
 	// 金币检测
 	for (unsigned int i = 0; i < coinArray->count(); i++){

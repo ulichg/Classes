@@ -10,6 +10,7 @@ class BaseScene :
 	public CCLayer
 {
 public:
+	CREATE_FUNC(BaseScene);
 	virtual bool init();
 	virtual void setMap(CCTMXTiledMap* map);
 	virtual void addMap(CCTMXTiledMap* map);
@@ -22,6 +23,8 @@ public:
 	CCArray* getRopeArray();
 	/*随机在后方添加一张地图*/
 	virtual void addRandomMap();
+	/*更新距离数值*/
+	void updateDistance(float dt);
 protected:
 	CCTMXTiledMap* map;
 	CCLayer* thingLayer;
@@ -36,4 +39,5 @@ protected:
 	CCArray* coinArray;
 	int siNum;
 	int coinNum;
+	int distance;
 };

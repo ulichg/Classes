@@ -101,3 +101,28 @@ void BaseScene::refreshCoinNumLabel(){
 CCArray* BaseScene::getRopeArray(){
 	return ropeArray;
 }
+
+void BaseScene::updateDistance(float dt){
+	if (!hero){
+		return;
+	}
+
+	distance = hero->getPositionY() / SCORE_PER_DIS;
+	CCLabelTTF* Label = (CCLabelTTF*)(this->getChildByTag(DIS_TAG));
+	char str[100];
+	sprintf(str, "距离：%i", distance);
+
+	if (!Label){
+		Label = CCLabelTTF::create(UTEXT(str), "Arial", 50);
+		this->addChild(Label, 20, DIS_TAG);
+	}
+	else {
+		Label->setString(UTEXT(str));
+	}
+
+	CCSize winsize = CCDirector::sharedDirector()->getWinSize();
+	CCSize lSize = Label->getContentSize();
+	float x = winsize.width / 3 * 2;
+	float y = winsize.height - lSize.height / 3 * 2 * 2;
+	Label->setPosition(ccp(x, y));
+}
