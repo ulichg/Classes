@@ -46,7 +46,7 @@ bool MaoChong::initWithTileMap(CCTMXTiledMap* map)
 	this->mArmature = NULL;
 	this->mController = NULL;
 	this->heroLevel = HERO_LEVEL;
-	this->curLine = 0;
+	this->curLine = START_LINE;
 	this->mStatus = HeroStatus::LEFT_PA;
 	this->map = map;
 
